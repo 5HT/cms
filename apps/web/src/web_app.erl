@@ -15,6 +15,7 @@ start(_StartType, _StartArgs) ->
     application:start(ranch),
     application:start(cowboy),
     application:start(n2o),
+    application:start(n2o_bootstrap),
     application:start(amqp_client),
     application:start(mqs),
     application:start(mnesia),
