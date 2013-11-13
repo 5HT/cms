@@ -43,7 +43,7 @@
 -define(DATA_AFFIX,     [{<<"data-spy">>,<<"affix">>}]).
 -define(DATA_DROPDOWN,  [{<<"data-toggle">>,<<"dropdown">>}]).
 -define(DATA_PILL,      [{<<"data-toggle">>,<<"pill">>}]).
--define(DATA_COLLAPSE,  [{<<"data-toggle">>, <<"collapse">>}, {<<"data-target">>, <<".nav-collapse">>}]).
+-define(DATA_COLLAPSE,  [{<<"data-toggle">>, <<"collapse">>}, {<<"data-target">>, <<".navbar-collapse">>}]).
 -define(DATA_OFFCANVAS, [{<<"data-toggle">>, <<"offcanvas">>}]).
 -define(URL_PRODUCT(Id),"/product?id="++wf:to_list(Id)).
 -define(URL_REVIEW(Id), "/review?id="++wf:to_list(Id)).

@@ -1,4 +1,4 @@
-@media (max-width: @screen-sm-max) {
+@media (max-width: @screen-sm-min) {
   .row-offcanvas {
     position: relative;
     -webkit-transition: all 0.25s ease-out;
@@ -14,6 +14,7 @@
   .row-offcanvas-left
   .sidebar-offcanvas {
     left: -50%; /* 6 columns */
+    & .affix {position:relative;}
   }
 
   .row-offcanvas-right.active {
@@ -30,10 +31,17 @@
     width: 50%; /* 6 columns */
   }
 }
+.navbar-toggle-left{
+    .navbar-toggle();
+    float:left;
+    margin-right:0;
+    margin-left:15px;
+}
 
 .sidebar-offcanvas{
-  @media (min-width: @screen-lg-min) {width: 250px;}
-  @media (min-width: @screen-sm-min) {width: 180px;}
+    margin-top:20px;
+    @media (min-width: @screen-md-min) {width: 200px;}
+    @media (min-width: @screen-lg-min) {width: 250px;}
 
   & li {
     & a {
