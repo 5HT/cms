@@ -206,7 +206,8 @@ event({edit_profile}) ->
                 size=?THUMB_SIZE});
 event({cancel})->
     Who = wf:user(),
-    wf:update(profile_ctl, [#link{body=#i{class=["fa-edit", "fa-large"]}, title= <<"edit">>, postback={edit_profile}}]),
+    wf:update(profile_ctl, [#link{body=#i{class=["fa-edit", "fa-large"]},
+                                  title= <<"edit">>, postback={edit_profile}}]),
 %    wf:update(displayname, Who#user.display_name),
     wf:update(img_ctl, []);
 event({apply_name}) ->
@@ -244,7 +245,8 @@ event({request, Feature}) ->
     {ok,#acl{}=Acl} ->
         Recipients = lists:flatten([case kvs:get(user, Accessor) of {error,_} -> [];
             {ok, U} -> {Type, Accessor, lists:keyfind(direct, 1, U#user.feeds)} end
-            || #acl_entry{accessor={Type,Accessor}, action=Action} <- kvs:entries(Acl, acl_entry, undefined), Action =:= allow]),
+            || #acl_entry{accessor={Type,Accessor}, action=Action} <- 
+                       kvs:entries(Acl, acl_entry, undefined), Action =:= allow]),
 
         case lists:keyfind(direct, 1, User#user.feeds) of false -> skip;
         {_,Fid} ->
