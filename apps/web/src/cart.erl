@@ -54,7 +54,8 @@ body()->
                             state=WishState,
                             header=[]}]},
 
-                #panel{id=?USR_ORDER(State#feed_state.container_id), class=["col-sm-3"], body=order_summary(State)} ]}]}]}
+                #panel{id=?USR_ORDER(State#feed_state.container_id), class=["col-sm-3"],
+                       body=order_summary(State)} ]}]}]}
     ] ++ index:footer() end.
 
 order_summary(S)-> order_summary(S,false).
