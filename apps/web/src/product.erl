@@ -31,7 +31,7 @@ body() ->
             case kvs:get(group,G) of
                 {error,_}-> [];
                 {ok, #group{scope=Scope}} when Scope == private -> [];
-                {ok, #group{id=Gid, name=Name, feeds=Feeds}} -> [{Gid, Name, lists:keyfind(products, 1, Feeds)}] end end,
+                {ok, #group{id=Gid,name=Name,feeds=Feeds}} -> [{Gid,Name,lists:keyfind(products,1,Feeds)}] end end,
             kvs_group:participate(P#product.id)),
         UsrFeeds = [{Feed,Fid}||{Feed, Fid} <- P#product.feeds, Feed /= comments andalso Feed /= bundles],
 
@@ -66,7 +66,8 @@ body() ->
                             [if Feed == reviews ->
                                 #panel{id=reviews, class=["tab-pane", active], body=feed(P,Fid,false)};
                              true ->
-                                #panel{id=Feed, class=["tab-pane"], body=feed(P,Fid)} end || {Feed,_}=Fid <- UsrFeeds],
+                                #panel{id=Feed, class=["tab-pane"], body=feed(P,Fid)} end 
+                                || {Feed,_}=Fid <- UsrFeeds],
                             if Owner -> [
                                 #panel{id=files,   class=["tab-pane"], body=files(P)},
                                 #panel{id=finance, class=["tab-pane"], body=payments(P)}]; true -> [] end ]}},
@@ -94,7 +95,10 @@ feed(#product{} = P, {Tab, Id},Escape) ->
 
 payments(#product{} = P)-> [
     #table{class=[table, "table-hover", payments],
-      header=[#tr{cells=[#th{body= <<"Date">>}, #th{body= <<"Status">>},#th{body= <<"Price">>},#th{body= <<"User">>}]}],
+      header=[#tr{cells=[#th{body= <<"Date">>}, 
+                         #th{body= <<"Status">>},
+                         #th{body= <<"Price">>},
+                         #th{body= <<"User">>}]}],
       body=[[begin
         #tr{cells=[
           #td{body=[index:to_date(Py#payment.start_time)]},
@@ -112,9 +116,11 @@ files(#product{} = P)->
         Fs = case wf:cache({Fid,?CTX#context.module}) of undefined ->
             State = ?FILE_STATE(Fid), wf:cache({Fid,?CTX#context.module}, State), State; S -> S end,
 
-        Is = case wf:cache({?FD_INPUT(Fid),?CTX#context.module}) of undefined ->
-            In = ?FILE_INPUT(Fid)#input_state{upload_dir= ?FILE_DIR,recipients=[{product,P#product.id,{bundles, Fid}}]},
-            wf:cache({?FD_INPUT(Fid),?CTX#context.module}, In), In; S1 -> S1 end,
+        Is = case wf:cache({?FD_INPUT(Fid),?CTX#context.module}) of 
+                  undefined -> In = ?FILE_INPUT(Fid)#input_state{upload_dir= ?FILE_DIR,
+                                         recipients=[{product,P#product.id,{bundles, Fid}}]},
+                                wf:cache({?FD_INPUT(Fid),?CTX#context.module}, In), In;
+                         S1 -> S1 end,
 
         #feed_ui{title="product files", state=Fs, header=[#input{state=Is}]} end.
 
@@ -137,7 +143,8 @@ aside(#product{} = P, Groups)->
     GroupFeeds = [begin
         {_,Gfid} = Fd,
         GS = case wf:cache({Gfid,?CTX#context.module}) of undefined ->
-            Gfs = ?FD_STATE(Gfid)#feed_state{view=group, flat_mode = true, entry_id = #entry.entry_id, delegate=product},
+            Gfs = ?FD_STATE(Gfid)#feed_state{view=group, flat_mode = true,
+                                             entry_id = #entry.entry_id, delegate=product},
             wf:cache({Gfid,?CTX#context.module}, Gfs), Gfs; GF -> GF end,
 
             #feed_ui{title= "More " ++ wf:to_list(Name),
@@ -236,7 +243,8 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=blog}=State})
         #figure{class=["thumbnail-figure"], body=[
             #carousel{items=[#entry_media{media=Media, mode=blog} || Media <- E#entry.media]},
             if length(E#entry.media) > 1 ->
-                #figcaption{class=["thumbnail-title"], body=[#h4{body=#span{body=E#entry.title}}]}; true -> [] end ]},
+                #figcaption{class=["thumbnail-title"], 
+                            body=[#h4{body=#span{body=E#entry.title}}]}; true -> [] end ]},
 
         #panel{id=?EN_DESC(UiId), body=index:shorten(E#entry.description), data_fields=[{<<"data-html">>, true}]},
 

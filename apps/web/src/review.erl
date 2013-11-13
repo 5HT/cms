@@ -46,7 +46,8 @@ body() ->
                         #h3{class=[blue], body= <<"&nbsp;&nbsp;&nbsp;&nbsp;Acticle">>},
                         #panel{body=index:to_date(E#entry.created)},
                         #p{body=#link{url="#",body=[
-                            #span{class=[?EN_CM_COUNT(Eid)], body=integer_to_list(kvs_feed:comments_count(entry, Eid))},
+                            #span{class=[?EN_CM_COUNT(Eid)], 
+                                  body=integer_to_list(kvs_feed:comments_count(entry, Eid))},
                             #i{class=["fa fa-comment-o", "fa-2x"]} ]}}], "fa fa-eye-open"),
 
                     case kvs:get(product, Prid) of {error,_} -> [];
@@ -71,7 +72,8 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=detached}=Sta
     Eid = element(State#feed_state.entry_id, E),
 
     Entry = #panel{class=["blog-post"], body=[
-        #h3{class=[blue], body=[#span{id=?EN_TITLE(Eid), body=E#entry.title, data_fields=[{<<"data-html">>, true}]}]},
+        #h3{class=[blue], body=[#span{id=?EN_TITLE(Eid),
+            body=E#entry.title, data_fields=[{<<"data-html">>, true}]}]},
         #panel{id=?EN_DESC(Eid), body=E#entry.description, data_fields=[{<<"data-html">>, true}]},
 
         case lists:keyfind(comments, 1, E#entry.feeds) of false -> [];
@@ -139,7 +141,8 @@ render_element(#div_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{
     wf:render([#panel{class=[media, "media-comment"], body=[
         #link{class=["pull-left"], body=[Avatar], url=?URL_PROFILE(C#comment.from)},
         #panel{class=["media-body"], body=[
-            #p{class=["media-heading"], body=[#link{body= Author, url=?URL_PROFILE(C#comment.from)}, <<",">>, Date ]},
+            #p{class=["media-heading"], body=[#link{body= Author,
+                                                    url=?URL_PROFILE(C#comment.from)}, <<",">>, Date ]},
             #p{body=C#comment.content},
             if State#feed_state.flat_mode == true -> [];
                 true -> #p{class=["media-heading"], body=[InnerFeed]} end ]} ]},

@@ -19,8 +19,9 @@ body()->
     Groups = lists:flatmap(fun(#group{scope=Scope, feeds=Feeds, name=Name})->
         case lists:keyfind(feed,1, Feeds) of
         {_,Fid} when Scope==public ->
-            case wf:cache({Fid,?CTX#context.module}) of undefined -> wf:cache({Fid,?CTX#context.module}, ?REVIEWS_FEED(Fid)), [{Name, Fid}];
-                _-> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
+            case wf:cache({Fid,?CTX#context.module}) of 
+                 undefined -> wf:cache({Fid,?CTX#context.module}, ?REVIEWS_FEED(Fid)), [{Name, Fid}];
+                         _ -> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
 
     All = case wf:cache({?FEED(entry),?CTX#context.module}) of undefined ->
         FS = ?ENTRIES_FEED, wf:cache({?FEED(entry),?CTX#context.module},FS), FS; F->F end,
@@ -29,10 +30,11 @@ body()->
     #section{class=[section], body=[
         #panel{class=[container], body=[
             #h4{class=["col-sm-12", "page-header-sm"], body=[
-                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}], data_fields=?DATA_TAB},
+                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}],
+                                           data_fields=?DATA_TAB},
                 #small{body= string:join([wf:to_list(wf:render(
-                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name], data_fields=?DATA_TAB})) 
-                        || {Name,Fid} <- Groups], " / ")} ]},
+                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name],
+                          data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")} ]},
 
             #panel{class=[row], body=[
                 #panel{class=["col-sm-9", "tab-content"], body=[
@@ -47,7 +49,9 @@ body()->
 render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State})->
     Id = element(State#feed_state.entry_id, E),
     UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
-    {FromId, From} = case kvs:get(user, E#entry.from) of {ok, User} -> {E#entry.from, User#user.display_name}; {error, _} -> {E#entry.from,E#entry.from} end,
+    {FromId, From} = case kvs:get(user, E#entry.from) of 
+                          {ok, User} -> {E#entry.from, User#user.display_name};
+                          {error, _} -> {E#entry.from,E#entry.from} end,
     wf:render([#panel{class=["col-sm-3", "article-meta"], body=[
         #h3{class=[blue], body= <<"">>},
         #p{class=[username], body= #link{body=From, url= "/profile?id="++wf:to_list(FromId)}},

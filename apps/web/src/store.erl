@@ -19,20 +19,23 @@ body()->
     Groups = lists:flatmap(fun(#group{scope=Scope, feeds=Feeds, name=Name})->
         case lists:keyfind(products,1, Feeds) of
         {_,Fid} when Scope==public ->
-            case wf:cache({Fid,?CTX#context.module}) of undefined -> wf:cache({Fid,?CTX#context.module}, ?STORE_FEED(Fid)), [{Name, Fid}];
-                _-> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
+            case wf:cache({Fid,?CTX#context.module}) of 
+                 undefined -> wf:cache({Fid,?CTX#context.module}, ?STORE_FEED(Fid)), [{Name, Fid}];
+                         _ -> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
 
-    All = case wf:cache({?FEED(product),?CTX#context.module}) of undefined ->
-        FS = ?PRODUCTS_FEED, wf:cache({?FEED(product),?CTX#context.module},FS), FS; F->F end,
+    All = case wf:cache({?FEED(product),?CTX#context.module}) 
+               of undefined -> FS = ?PRODUCTS_FEED, wf:cache({?FEED(product),?CTX#context.module},FS), FS;
+                          F -> F end,
 
     index:header() ++ [
     #section{class=[section], body=[
         #panel{class=[container], body=[
             #h4{class=["col-sm-12", "page-header-sm"], body=[
-                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}], data_fields=?DATA_TAB},
+                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}],
+                                           data_fields=?DATA_TAB},
                 #small{body= string:join([wf:to_list(wf:render(
-                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name], data_fields=?DATA_TAB})) 
-                        || {Name,Fid} <- Groups], " / ")} ]},
+                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name],
+                          data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")} ]},
 
             #panel{class=[row], body=[
                 #panel{class=["col-sm-9", "tab-content"], body=[
