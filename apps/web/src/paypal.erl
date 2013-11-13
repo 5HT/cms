@@ -53,6 +53,6 @@ product_request(Index, Id, #product{title=Title,price=Price, brief=Brief}) -> [
     {"L_PAYMENTREQUEST_0_NAME"++Index, Title},
     {"L_PAYMENTREQUEST_0_NUMBER"++Index, Id},
     {"L_PAYMENTREQUEST_0_DESC"++Index, Brief},
-    {"L_PAYMENTREQUEST_0_AMT"++Index, float_to_list(Price/100, [{decimals,2}])},
+    {"L_PAYMENTREQUEST_0_AMT"++Index, wf:to_list(Price/100, [{decimals,2}])},
     {"L_PAYMENTREQUEST_n_QTY"++Index, 1},
     {"L_PAYMENTREQUEST_n_ITEMCATEGORY"++Index, "Digital"}].

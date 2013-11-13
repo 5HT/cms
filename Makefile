@@ -1,6 +1,6 @@
 RELEASE := countach
 COOKIE  := node_runner
-APPS    := web amqp_client avz cowboy erlydtl gproc kai kvs lager mimetypes mqs n2o n2o_bootstrap oauth rabbit_common ranch sync eper feed_server
+APPS    := amqp_client avz cowboy erlydtl gproc kai kvs lager mimetypes mqs n2o n2o_bootstrap oauth rabbit_common ranch sync eper feed_server
 VER     := 1.0.0
 VM      := rels/web/files/vm.args
 SYS     := rels/web/files/sys.config

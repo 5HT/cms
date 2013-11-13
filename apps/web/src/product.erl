@@ -105,7 +105,7 @@ payments(#product{} = P)-> [
           #td{class=[case Py#payment.state of done -> "text-success"; added-> "text-warning"; _-> "text-error" end],
                 body= [atom_to_list(Py#payment.state)]},
           #td{body=[case Cur of "USD"-> #span{class=["fa fa-usd"]}; _ -> #span{class=["fa fa-money"]} end,
-                float_to_list(Price/100, [{decimals, 2}])]},
+                wf:to_list(Price/100, [{decimals, 2}])]},
           #td{body=#link{body=User, url= ?URL_PROFILE(User)}}]}
       end || #payment{user_id=User, product=#product{price=Price, currency=Cur}} = Py
         <- kvs:all_by_index(payment, product_id, P#product.id) ]]}].
@@ -186,7 +186,7 @@ render_element(#product_hero{product=P}) ->
                                 download=[filename:basename(Url)]} end end;
             true ->
                 #button{class=[btn, "btn-large", "btn-inverse", "btn-info", "btn-buy", win],
-                    body= [<<"buy for ">>, #span{body= "$"++ float_to_list(P#product.price/100, [{decimals, 2}]) }],
+                    body= [<<"buy for ">>, #span{body= "$"++ wf:to_list(P#product.price/100, [{decimals, 2}]) }],
                     postback={add_cart, P}} end
         ]}
       ]}

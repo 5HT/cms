@@ -55,7 +55,7 @@ body() ->
                         #h3{class=[blue], body= <<"&nbsp;&nbsp;&nbsp;&nbsp;Game">>},
                         #h4{body=P#product.title},
                         #p{body=P#product.brief},
-                        #p{body=[#span{class=["fa fa-usd"]}, float_to_list(P#product.price/100, [{decimals, 2}])]},
+                        #p{body=[#span{class=["fa fa-usd"]}, wf:to_list(P#product.price/100, [{decimals, 2}])]},
 
                         #panel{class=["btn-toolbar", "text-center"], body=#button{class=[btn, "btn-warning"],
                             body=[#span{class=["fa fa-shopping-cart"]},<<" add to cart">>],
