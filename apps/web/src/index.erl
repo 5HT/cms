@@ -31,8 +31,9 @@ body() ->
     Groups = lists:flatmap(fun(#group{scope=Scope, feeds=Feeds, name=Name})->
         case lists:keyfind(feed,1, Feeds) of
         {_,Fid} when Scope==public ->
-            case wf:cache({Fid,?CTX#context.module}) of undefined -> wf:cache({Fid,?CTX#context.module}, ?REVIEWS_FEED(Fid)), [{Name, Fid}];
-                _-> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
+            case wf:cache({Fid,?CTX#context.module}) of 
+                 undefined -> wf:cache({Fid,?CTX#context.module}, ?REVIEWS_FEED(Fid)), [{Name, Fid}];
+                         _ -> [{Name,Fid}] end; _ -> [] end end, kvs:all(group)),
 
     All = case wf:cache({?FEED(entry),?CTX#context.module}) of undefined ->
         FS = ?ENTRIES_FEED, wf:cache({?FEED(entry),?CTX#context.module},FS), FS; F->F end,
@@ -66,7 +67,10 @@ featured() ->
   #carousel{class=["product-carousel"], items=case kvs:get(group, "featured") of
     {error, not_found} -> [];
     {ok, G} ->
-      Ps = lists:flatten([ case kvs:get(product, Who) of {ok, P}->P; {error,_}-> [] end || #group_subscription{who=Who}<-kvs_group:members(G#group.name)]),
+      Ps = lists:flatten([ case kvs:get(product, Who) of 
+                                {ok, P}->P; 
+                                {error,_}-> [] end || #group_subscription{who=Who} <-
+                                         kvs_group:members(G#group.name)]),
       [begin
         {Cover, Class} = case P#product.cover of
           undefined -> {<<"">>, ""};
@@ -130,13 +134,17 @@ header() ->
 
             #panel{class=["navbar-collapse", collapse], body=[
                 #list{class=[nav, "navbar-nav"], body=[
-                    #li{body=#link{url= <<"/store">>, body=[#span{class=["fa-stack","fa-lg"], style="width:0"},<<"Store">>]}},
-                    #li{body=#link{url= <<"/reviews">>, body=[#span{class=["fa-stack","fa-lg"], style="width:0"},<<"Reviews">>]}}]},
+                    #li{body=#link{url= <<"/store">>, body=[#span{class=["fa-stack","fa-lg"], 
+                                   style="width:0"},<<"Store">>]}},
+                    #li{body=#link{url= <<"/reviews">>, body=[#span{class=["fa-stack","fa-lg"], 
+                                   style="width:0"},<<"Reviews">>]}}]},
 
                 #list{class=[nav, "navbar-nav", "navbar-right"], body=case User#user.email of undefined ->
-                    #li{body=#link{url= <<"/login">>, body=[#span{class=["fa-stack","fa-lg"], style="width:0"},<<"Sign In">>]}};
+                    #li{body=#link{url= <<"/login">>, body=[#span{class=["fa-stack","fa-lg"], 
+                                   style="width:0"},<<"Sign In">>]}};
                 _ -> [
-                    #li{body=#link{url= <<"/profile">>,body=[#span{class=["fa-stack","fa-lg"], style="width:0"},<<"Account">>]}},
+                    #li{body=#link{url= <<"/profile">>,body=[#span{class=["fa-stack","fa-lg"], 
+                                   style="width:0"},<<"Account">>]}},
                     #li{body=[#link{url= <<"/cart">>, body=[
                         #span{id=?USR_CART(User#user.id), class=["cart-number"], body= case CartFeed of
                                                 {error,_} -> <<"?">>;
@@ -153,7 +161,8 @@ header() ->
                                 #image{class=[fa, "fa-stack-1x"], image=Avatar}]}]},
 
                         #list{class=["dropdown-menu"], role=menu, body=[
-                            #li{body=#link{url="/profile",  body=[#i{class=[fa,"fa-user", "fa-lg", "fa-fw"]}, <<"&nbsp;Profile">>]}},
+                            #li{body=#link{url="/profile",  body=[#i{class=[fa,"fa-user", "fa-lg", "fa-fw"]},
+                                           <<"&nbsp;Profile">>]}},
                             if Rev -> #li{body=#link{url="/myreviews", body=[
                                 #i{class=[fa,"fa-list", "fa-lg", "fa-fw"]}, <<"&nbsp;Reviews">>]}};true->[] end,
                             if Dev -> #li{body=#link{url="/mygames",  body=[
@@ -165,7 +174,8 @@ header() ->
                             if Admin -> #li{body=#link{url="/admin", body=[
                                 #i{class=[fa,"fa-cog", "fa-lg", "fa-fw"]}, <<"&nbsp;Admin">>]}};true->[] end,
                             #li{body=#link{id=logoutbtn, postback=logout, delegate=login,
-                                body=[#i{class=[fa, "fa-power-off", "fa-lg", "fa-fw"]}, <<"&nbsp;Logout">> ]}}]}]}]end}]}]}]},
+                                body=[#i{class=[fa, "fa-power-off", "fa-lg", "fa-fw"]}, <<"&nbsp;Logout">>
+                                ]}}]}]}] end }]}]}]},
     #panel{class=[container], body=[
         #panel{id=?PAGE_ALERT({?CTX#context.module, User#user.email})}
     ]} ].
