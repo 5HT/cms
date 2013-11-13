@@ -18,7 +18,7 @@
 -jsmacro([off_canvas/0]).
 
 off_canvas()->
-    jq(fun()-> J = jq("[data-toggle=offcanvas]"), J:click(fun()->
+    jq(fun()-> J = jq("[data-toggle=\"offcanvas\"]"), J:click(fun()->
         J1 =jq(".row-offcanvas"), J1:toggleClass("active") end) end).
 
 sidenav({What, Active, Tabs})->
