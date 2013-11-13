@@ -1,0 +1,58 @@
+-include_lib("feed_server/include/records.hrl").
+
+-define(ROOT, code:priv_dir(web)).
+
+-define(CSS,                "/static/css/countach.css").
+-define(LESS,               "/static/less/countach.less").
+-define(REVIEWS_CSS,        "/static/css/countach.css").
+-define(REVIEWS_LESS,       "/static/less/countach.less").
+-define(BOOTSTRAP,          "/static/js/countach.min.js").
+-define(REVIEWS_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(INDEX_CSS,          "/static/css/countach.css").
+-define(INDEX_LESS,         "/static/less/countach.less").
+-define(INDEX_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(LOGIN_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(LOGIN_CSS,          "/static/css/countach.css").
+-define(PRODUCT_CSS,        "/static/css/countach.css").
+-define(PRODUCT_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(MYREVIEW_CSS,       "/static/css/countach.css").
+-define(MYREVIEW_BOOTSTRAP, "/static/js/countach.min.js").
+-define(DIRECT_CSS,         "/static/css/countach.css").
+-define(DIRECT_BOOTSTRAP,   "/static/js/countach.min.js").
+-define(ADMIN_CSS,          "/static/css/countach.css").
+-define(ADMIN_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(PROFILE_CSS,        "/static/css/countach.css").
+-define(PROFILE_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(CART_CSS,           "/static/css/countach.css").
+-define(CART_BOOTSTRAP,     "/static/js/countach.min.js").
+-define(CHECKOUT_CSS,       "/static/css/countach.css").
+-define(CHECKOUT_BOOTSTRAP, "/static/js/countach.min.js").
+-define(STORE_CSS,          "/static/css/countach.css").
+-define(STORE_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(MYGAMES_CSS,        "/static/css/countach.css").
+-define(MYGAMES_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(REVIEW_CSS,         "/static/css/countach.css").
+-define(REVIEW_BOOTSTRAP,   "/static/js/countach.min.js").
+
+-define(PAGE_SIZE, 4).
+-define(BTN_INFO,       [btn, "btn-info"]).
+-define(BTN_SUCCESS,    [btn, "btn-success"]).
+-define(STACK_BASE,     ["icon-stack-base", "icon-circle"]).
+-define(DATA_TOOLTIP,   [{<<"data-toggle">>,<<"tooltip">>}]).
+-define(DATA_TAB,       [{<<"data-toggle">>,<<"tab">>}]).
+-define(DATA_AFFIX,     [{<<"data-spy">>,<<"affix">>}]).
+-define(DATA_DROPDOWN,  [{<<"data-toggle">>,<<"dropdown">>}]).
+-define(DATA_PILL,      [{<<"data-toggle">>,<<"pill">>}]).
+-define(DATA_COLLAPSE,  [{<<"data-toggle">>, <<"collapse">>}, {<<"data-target">>, <<".nav-collapse">>}]).
+-define(DATA_OFFCANVAS, [{<<"data-toggle">>, <<"offcanvas">>}]).
+-define(URL_PRODUCT(Id),"/product?id="++wf:to_list(Id)).
+-define(URL_REVIEW(Id), "/review?id="++wf:to_list(Id)).
+-define(URL_PROFILE(Id),"/profile?id="++wf:to_list(Id)).
+
+-record(struct,         {lst=[]}).
+-record(product_hero,   {?ELEMENT_BASE(product), product}).
+
+-define(USR_CART(Id),   wf:to_list(erlang:phash2(Id))++"cart").
+-define(USR_ORDER(Id),  wf:to_list(erlang:phash2(Id))++"order").
+-define(FD_CHKOUT(Id),  wf:to_list(Id)++"chk").
+-define(PAGE_ALERT(Id), wf:to_list(erlang:phash2(Id))++"alt").

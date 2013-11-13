@@ -1,0 +1,20 @@
+
+iGratch model
+=============
+
+High-Level Entities
+-------------------
+
+    [review] - 1, 2, 3, ...
+    [product] - uncharted, nfs, gta, mgs, ...
+    [user] - maxim, doxtop, ...
+    [group] - action, rpg, platformer, ...
+
+Underlying KVS model
+--------------------
+
+    each [review] and [product] stored as [entry] chains in [feed]
+    each [group] has two chains: [reviews] and [products]
+    each [user] has two chains: [reviews] and [products]
+    each [product] has 6 feeds: [feaures], [specs], [gallery], [videos], [reviews], [news], [bundles]
+    each [review] has 1 feed: [comments]
