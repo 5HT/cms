@@ -21,9 +21,11 @@ body()->
         {_, Cid} -> case wf:cache({Cid, ?CTX#context.module}) of undefined ->
             CS = ?CART_STATE(Cid), wf:cache({Cid, ?CTX#context.module},CS), CS; Cs-> Cs end end,
 
-    WishState = case lists:keyfind(wishlist, 1, element(#iterator.feeds, User)) of false -> undefined;
-        {_, Wid} -> case wf:cache({Wid, ?CTX#context.module}) of undefined ->
-            Ws = ?CART_STATE(Wid)#feed_state{view=store}, wf:cache({Wid, ?CTX#context.module}, Ws), Ws; WS-> WS end end,
+    WishState = case lists:keyfind(wishlist, 1, element(#iterator.feeds, User)) of
+        false -> undefined;
+        {_, Wid} -> case wf:cache({Wid, ?CTX#context.module}) of 
+            undefined -> Ws = ?CART_STATE(Wid)#feed_state{view=store},
+                         wf:cache({Wid, ?CTX#context.module}, Ws), Ws; WS-> WS end end,
 
     index:header() ++ [
     #section{class=[section], body=[
