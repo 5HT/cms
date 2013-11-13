@@ -100,7 +100,9 @@ tab(products)->
     wf:cache({?FEED(product),?CTX#context.module}, State),
 
     #feed_ui{title= <<"Products">>, icon="fa fa-gamepad", state=State#feed_state{js_escape=true}, header=[
-        #tr{class=["feed-table-header"], cells=[#th{body= <<"">>},#th{body= <<"title">>}, #th{body= <<"description">>}]}]};
+        #tr{class=["feed-table-header"], cells=[#th{body= <<"">>},
+                                                #th{body= <<"title">>},
+                                                #th{body= <<"description">>}]}]};
 
 tab(reviews)->
     State = ?REVIEWS_VIEW_FEED,
