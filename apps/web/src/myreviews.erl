@@ -63,7 +63,8 @@ render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=r
         ]},
 
         #panel{id=?EN_TOOL(UiId), class=["col-sm-1"], body=[
-            #link{body= <<"edit">>, class=[btn, "btn-default", "btn-block"], delegate=input, postback={edit, E, InputState}},
+            #link{body= <<"edit">>, class=[btn, "btn-default", "btn-block"], delegate=input,
+                  postback={edit, E, InputState}},
             #link{body= <<"more">>, class=[btn, "btn-default", "btn-block"], url=?URL_REVIEW(Eid)} ]}
 
     ]);
