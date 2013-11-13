@@ -40,7 +40,9 @@ render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=pro
     {ok, P} ->
         Fid = State#feed_state.container_id,
         UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
-        From = case kvs:get(user, E#entry.from) of {ok, User} -> User#user.display_name; {error, _} -> E#entry.from end,
+        From = case kvs:get(user, E#entry.from) of 
+                    {ok, User} -> User#user.display_name;
+                    {error, _} -> E#entry.from end,
         InputState = (wf:cache({?FD_INPUT(Fid),?CTX#context.module}))#input_state{update=true},
 
         wf:render([#panel{class=["col-sm-3", "article-meta"], body=[
@@ -55,7 +57,8 @@ render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=pro
                 #b{body=float_to_list(P#product.price/100, [{decimals, 2}])}
             ]} ]},
 
-            #panel{id=?EN_MEDIA(UiId), class=["col-sm-4","media-pic"], body=#entry_media{media=E#entry.media, mode=reviews}},
+            #panel{id=?EN_MEDIA(UiId), class=["col-sm-4","media-pic"],
+                   body=#entry_media{media=E#entry.media, mode=reviews}},
 
             #panel{class=["col-sm-4", "article-text"], body=[
                 #h3{body=#span{id=?EN_TITLE(UiId), class=[title], body=
@@ -63,7 +66,8 @@ render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=pro
                 #p{id=?EN_DESC(UiId), body=E#entry.description}
             ]},
             #panel{class=["col-sm-1"], body=[
-                #link{body= <<"edit">>, class=[btn, "btn-default","btn-block"], delegate=input, postback={edit, P, InputState}},
+                #link{body= <<"edit">>, class=[btn, "btn-default","btn-block"], delegate=input,
+                      postback={edit, P, InputState}},
                 #link{body= <<"more">>, class=[btn, "btn-default","btn-block"], url=?URL_PRODUCT(Id)} ]} ]) end;
 render_element(E)-> feed_ui:render_element(E).
 

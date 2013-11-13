@@ -63,8 +63,9 @@ body() ->
                             #link{class=[btn, "btn-warning"], body= <<"pay now">>, postback={buy,
                                 [{"PAYMENTREQUEST_0_PAYMENTACTION", "Sale"},
                                 {"PAYERID", PayerId},
-                                {"TOKEN", Token},
-                                {"PAYMENTREQUEST_0_AMT", proplists:get_value("PAYMENTREQUEST_0_AMT", Details)}], Details}
+                                {"TOKEN",   Token},
+                                {"PAYMENTREQUEST_0_AMT", proplists:get_value("PAYMENTREQUEST_0_AMT", Details)}],
+                                            Details}
                             },
                             #link{class=[btn], body= <<"cancel">>, postback={cancel, Token}}]}
                     ]}

@@ -42,7 +42,8 @@ body() ->
               L -> error_logger:info_msg("X:",[L]), L end
      ++ "! Here you can chat, please go on!") end ]},
         #textarea{id=message,style="display: inline-block; width: 200px; margin-top: 20px; margin-right: 20px;"},
-        #button{id=send,body="Send",class=["btn","btn-primary","btn-large","btn-inverse"],postback={chat,Pid},source=[message]}
+        #button{id=send,body="Send",class=["btn","btn-primary","btn-large","btn-inverse"],
+                postback={chat,Pid},source=[message]}
       ]}
     ]}
   ]}
