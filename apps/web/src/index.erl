@@ -40,7 +40,9 @@ body() ->
     Discus = case wf:cache({?FEED(comment),?CTX#context.module}) of undefined ->
         AS= ?ACTIVE_FEED, wf:cache({?FEED(comment),?CTX#context.module}, AS),AS; A->A end,
 
-    header() ++ [
+    [#panel{class=[page], body=[
+        header(),
+        #panel{class=["page-wrapper"],body=[
         #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
 
         #section{class=[container], body=[
@@ -59,7 +61,7 @@ body() ->
                     #feed_ui{title= <<"Active discussion">>,
                             icon=[fa, "fa-comments-o"],
                             class="comments-flat",
-                            state=Discus} ]}]}]} ] ++ footer().
+                            state=Discus} ]}]}]} ]} ]}] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
@@ -127,40 +129,32 @@ header() ->
 
                 lists:flatmap(fun(F) -> case F of {navbar,0} -> [(?CTX#context.module):navbar()]; _-> [] end end,
                     (?CTX#context.module):module_info(exports)),
-
-                #link{url="/index", class=["navbar-brand"], body=[
-                    #span{class=["fa-stack"],body=[
-                        #i{class=[fa,"fa-circle-o", "fa-stack-2x"]},
-                        #i{class=[fa,"fa-road", "fa-stack-1x"]}]},
-                    <<"&nbsp;Esprit">>]}]},
+                #link{url="/index", class=["navbar-brand"], body= <<"countach">>} ]},
 
             #panel{class=["navbar-collapse", collapse], body=[
                 #list{class=[nav, "navbar-nav"], body=[
-                    #li{body=#link{url= <<"/store">>, body=[#span{class=["fa-stack","fa-lg"], 
-                                   style="width:0"},<<"Store">>]}},
-                    #li{body=#link{url= <<"/reviews">>, body=[#span{class=["fa-stack","fa-lg"], 
-                                   style="width:0"},<<"Reviews">>]}}]},
+                    #li{body=#link{url= <<"/store">>, body= <<"Store">> }},
+                    #li{body=#link{url= <<"/reviews">>, body= <<"Reviews">> }}]},
 
                 #list{class=[nav, "navbar-nav", "navbar-right"], body=case User#user.email of undefined ->
-                    #li{body=#link{url= <<"/login">>, body=[#span{class=["fa-stack","fa-lg"], 
-                                   style="width:0"},<<"Sign In">>]}};
+                    #li{body=#link{url= <<"/login">>, body= <<"Sign In">> }};
                 _ -> [
-                    #li{body=#link{url= <<"/profile">>,body=[#span{class=["fa-stack","fa-lg"], 
-                                   style="width:0"},<<"Account">>]}},
                     #li{body=[#link{url= <<"/cart">>, body=[
-                        #span{id=?USR_CART(User#user.id), class=["cart-number"], body= case CartFeed of
+                        #span{class=["fa-stack", "fa-lg"], body=[
+                            #span{id=?USR_CART(User#user.id), class=["cart-number", "fa-stack-2x"], body= case CartFeed of
                                                 {error,_} -> <<"?">>;
                                                 {ok, #feed{entries_count=C}} when C==0 -> <<"0">>;
-                                                {ok, #feed{entries_count=C}} -> integer_to_list(C) end},
+                                                {ok, #feed{entries_count=C}} -> integer_to_list(C) end}
+                        ]},
 
                         #span{class=["fa-stack", "fa-lg"],title= <<"shopping cart">>, body=[
                             #i{class=[fa,"fa-square-o","fa-stack-2x"]},
                             #i{class=[fa,"fa-shopping-cart","fa-stack-1x"]}]}]} ]},
+
                     #li{class=[dropdown], body=[
                         #link{class=["dropdown-toggle"], data_fields=?DATA_DROPDOWN, body=[
-                            #span{class=["fa-stack","fa-lg"], style="", body=[
-                                #i{class=[fa,"fa-circle-o","fa-stack-2x"]},
-                                #image{class=[fa, "fa-stack-1x"], image=Avatar}]}]},
+                            #image{class=["img-4x", "img-thumbnail", "img-circle"], image=Avatar} ]}
+                        ,
 
                         #list{class=["dropdown-menu"], role=menu, body=[
                             #li{body=#link{url="/profile",  body=[#i{class=[fa,"fa-user", "fa-lg", "fa-fw"]},
@@ -182,8 +176,7 @@ header() ->
         #panel{id=?PAGE_ALERT({?CTX#context.module, User#user.email})}
     ]} ].
 
-footer() -> [
-  #footer{class=[footer],body=#panel{class=[container], body=[#p{body= <<"&copy; Synrc 2013">>}]}}].
+footer() -> [ #dtl{file = "tl", ext="dtl", bindings=[]} ].
 
 success(Msg)-> alert(Msg, "alert-success").
 error(Msg)  -> alert(Msg,"alert-danger").

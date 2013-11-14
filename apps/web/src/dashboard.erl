@@ -23,11 +23,11 @@ off_canvas()->
 
 sidenav({What, Active, Tabs})->
     Who = wf:user(),
-    #list{class=[nav, "nav-pills", "nav-stacked", "affix-top"], data_fields=?DATA_AFFIX, body=[
+    #list{class=["list-group", "affix-top"], data_fields=?DATA_AFFIX, body=[
     begin
         SubTabs = if Active == Page -> [
-            if Tabs /= [] -> #li{class=[divider]}; true-> [] end,
-            [#li{body=[#link{url= "#"++wf:to_list(Id),
+            if Tabs /= [] -> #li{class=["list-group-item",divider]}; true-> [] end,
+            [#li{class=["list-group-item"], body=[#link{url= "#"++wf:to_list(Id),
                 data_fields=?DATA_PILL, body= Label}]} || {Id, Label} <- Tabs]]; true -> [] end,
 
         Class = if Active == Page -> [active]; true -> [] end,
@@ -38,7 +38,7 @@ sidenav({What, Active, Tabs})->
                     {ok, F}-> #span{class=[label, "label-info"],
                                     body=integer_to_list(F#feed.entries_count)} end; true -> [] end,
 
-        [#li{class=Class, body=#link{
+        [#li{class=["list-group-item",Class], body=#link{
                 url=if SubTabs/=[]->"#"; true -> "/" end ++atom_to_list(Page),
                 data_fields=if SubTabs/=[]->?DATA_PILL; true-> [] end,  body=[Title, Badge]}}, SubTabs]
     end || {Page, Title, Feed} <- lists:filter(fun({P,_,_})-> 
@@ -58,10 +58,12 @@ section(Id, Body, Icon, Class) ->
 
 page({_,_,_}=Nav, Body)->
     wf:wire(off_canvas()),
-    index:header() ++ [
-        #section{class=[container], body=[
-            #panel{class=[row, "row-offcanvas", "row-offcanvas-left"], body=[
-                #panel{id=sidenav, class=["col-xs-6", "col-sm-3", "sidebar-offcanvas"], role=navigation, 
-                                   body=[sidenav(Nav)]},
-                #panel{class=["col-xs-12","col-sm-9"], body=Body} ]} ]} ] ++ index:footer();
+    [#panel{class=[page], body=[
+        index:header(),
+        #panel{class=["page-wrapper"], body=[
+            #section{class=[container], body=[
+                #panel{class=[row, "row-offcanvas", "row-offcanvas-left"], body=[
+                    #panel{id=sidenav, class=["col-xs-6", "col-sm-3", "sidebar-offcanvas"], role=navigation,
+                        body=[sidenav(Nav)]},
+                    #panel{class=["col-xs-12","col-sm-9"], body=Body} ]} ]} ]} ]}] ++ index:footer();
 page(_,_)->[].

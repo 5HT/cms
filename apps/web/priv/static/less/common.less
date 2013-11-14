@@ -1,9 +1,69 @@
-html {
-  overflow-x: hidden; /* Prevent scroll on narrow devices */
+html {height:100%;}
+body{height:100%;}
+img{height:auto;}
+
+.page {
+    min-height: 100%;
+    height: auto;
+    /* Negative indent footer by its height */
+    margin: 0 auto -279px;
+    /* Pad bottom by footer height */
+    padding: 0 0 279px;
+
+    & .page-wrapper{
+        padding-top: @navbar-height;
+    }
 }
 
-body{
-  padding-top:70px;
+.section {
+    padding: 30px 0px;
+    margin: 0;
+    position: relative;
+
+    &.alt {
+        background-repeat: repeat;
+        .box-shadow(~"0 -1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 3px rgba(0, 0, 0, 0.25) inset");
+        text-shadow: 1px 1px 1px white;
+
+        &.pattern-45-degree-fabric{
+            background-image: url(/static/img/theme/45degreee_fabric.png);
+            background-size: 315px 315px;
+        }
+    }
+}
+
+.navbar-fixed-top {.box-shadow(0 1px 10px rgba(0,0,0,.1));}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 30px;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-transform:uppercase;
+    font-family: @headings-font-family;
+
+    & i {
+        line-height: 20px;
+        .transition(all 0.2s);
+
+        &::hover i {.rotate(8deg); color: #41b7d8;}
+    }
+}
+
+.navbar .navbar-nav > li > a {
+    text-shadow: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    max-height: @navbar-height;
+
+    & .fa-stack{
+        margin-top:-0.5em;
+    }
+    & .img-4x {
+        width:4em;
+        height:4em;
+        margin-top:-1.5em;
+    }
 }
 
 .modal-login{
@@ -13,3 +73,41 @@ body{
     top:auto;
     & .btn-toolbar {&.text-center {& .btn-group{float:none}}}
 }
+
+.sky-footer{
+    background: #333333;
+    color: #e9e9e9;
+    text-shadow: 1px 1px 1px #222222;
+    .box-shadow(0 3px 3px rgba(0,0,0,.25));
+    padding: 0;
+    margin: 0;
+    position: relative;
+    font-size: 20px;
+    min-height: 279px;
+
+    & .row-fluid [class*="span"], & .row [class*="col-sm-*"] {padding:30px;}
+
+    & small {
+        color: #e9e9e9;
+        font-style: italic;
+        text-indent:0;
+        display:block;
+    }
+    & .icons {
+        text-indent: -1em;
+        margin-left: 2em;
+        list-style-type: none;
+    }
+
+    & h3 {font-size:18px;text-transform: uppercase}
+
+    & .footer-banner{
+        background-color: @dark-azure;
+        color: #fff;
+        text-shadow:0 0 0;
+        & a{color:#fff;&:hover{color:#fff;}}
+    }
+}
+
+
+
