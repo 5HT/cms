@@ -1,38 +1,39 @@
 -include_lib("feed_server/include/records.hrl").
 
 -define(ROOT, code:priv_dir(web)).
+-define(DEFJS, "/static/js/all.min.js").
 
 -define(CSS,                "/static/css/countach.css").
 -define(LESS,               "/static/less/countach.less").
 -define(REVIEWS_CSS,        "/static/css/countach.css").
 -define(REVIEWS_LESS,       "/static/less/countach.less").
--define(BOOTSTRAP,          "/static/js/countach.min.js").
--define(REVIEWS_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(BOOTSTRAP,          ?DEFJS).
+-define(REVIEWS_BOOTSTRAP,  ?DEFJS).
 -define(INDEX_CSS,          "/static/css/countach.css").
 -define(INDEX_LESS,         "/static/less/countach.less").
--define(INDEX_BOOTSTRAP,    "/static/js/countach.min.js").
--define(LOGIN_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(INDEX_BOOTSTRAP,    ?DEFJS).
+-define(LOGIN_BOOTSTRAP,    ?DEFJS).
 -define(LOGIN_CSS,          "/static/css/countach.css").
 -define(PRODUCT_CSS,        "/static/css/countach.css").
--define(PRODUCT_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(PRODUCT_BOOTSTRAP,  ?DEFJS).
 -define(MYREVIEW_CSS,       "/static/css/countach.css").
--define(MYREVIEW_BOOTSTRAP, "/static/js/countach.min.js").
+-define(MYREVIEW_BOOTSTRAP, ?DEFJS).
 -define(DIRECT_CSS,         "/static/css/countach.css").
--define(DIRECT_BOOTSTRAP,   "/static/js/countach.min.js").
+-define(DIRECT_BOOTSTRAP,   ?DEFJS).
 -define(ADMIN_CSS,          "/static/css/countach.css").
--define(ADMIN_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(ADMIN_BOOTSTRAP,    ?DEFJS).
 -define(PROFILE_CSS,        "/static/css/countach.css").
--define(PROFILE_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(PROFILE_BOOTSTRAP,  ?DEFJS).
 -define(CART_CSS,           "/static/css/countach.css").
--define(CART_BOOTSTRAP,     "/static/js/countach.min.js").
+-define(CART_BOOTSTRAP,     ?DEFJS).
 -define(CHECKOUT_CSS,       "/static/css/countach.css").
--define(CHECKOUT_BOOTSTRAP, "/static/js/countach.min.js").
+-define(CHECKOUT_BOOTSTRAP, ?DEFJS).
 -define(STORE_CSS,          "/static/css/countach.css").
--define(STORE_BOOTSTRAP,    "/static/js/countach.min.js").
+-define(STORE_BOOTSTRAP,    ?DEFJS).
 -define(MYGAMES_CSS,        "/static/css/countach.css").
--define(MYGAMES_BOOTSTRAP,  "/static/js/countach.min.js").
+-define(MYGAMES_BOOTSTRAP,  ?DEFJS).
 -define(REVIEW_CSS,         "/static/css/countach.css").
--define(REVIEW_BOOTSTRAP,   "/static/js/countach.min.js").
+-define(REVIEW_BOOTSTRAP,   ?DEFJS).
 
 -define(PAGE_SIZE, 4).
 -define(BTN_INFO,       [btn, "btn-info"]).
