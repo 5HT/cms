@@ -4,14 +4,35 @@
     <title>{{title}}</title>
     <meta name="author" content="Андрей">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="/static/images/favicon.ico" rel="shortcut icon" >
-    <link href= {{css}} rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet/less" type="text/css" href= {{less}} />
+    <script src="/static/less.js/dist/less-1.5.0.min.js" type="text/javascript"></script>
 </head>
 <body>
     {{body}}
     <script>{{script}}</script>
     <div id="n2ostatus" style="display:none"></div>
-    <script src={{js}}></script>
+    <script src="/static/n2o/jquery.js"></script>
+    <script src="/static/n2o/bert.js"></script>
+    <script src="/static/n2o/bullet.js"></script>
+    <script src="/static/n2o/n2o.js"></script>
+    <script src="/static/js/holder.js"></script>
+    <script src="/static/bootstrap/js/affix.js"></script>
+    <script src="/static/bootstrap/js/alert.js"></script>
+    <script src="/static/bootstrap/js/button.js"></script>
+    <script src="/static/bootstrap/js/carousel.js"></script>
+    <script src="/static/bootstrap/js/collapse.js"></script>
+    <script src="/static/bootstrap/js/dropdown.js"></script>
+    <script src="/static/bootstrap/js/modal.js"></script>
+    <script src="/static/bootstrap/js/tooltip.js"></script>
+    <script src="/static/bootstrap/js/popover.js"></script>
+    <script src="/static/bootstrap/js/scrollspy.js"></script>
+    <script src="/static/bootstrap/js/tab.js"></script>
+    <script src="/static/bootstrap/js/transition.js"></script>
+    <script src="/static/n2o_bt/js/htmlbox.js"></script>
+    <script src="/static/n2o_bt/js/slider.js"></script>
+    <script src="/static/n2o_bt/js/select.js"></script>
+    <script src="/static/n2o_bt/js/upload.js"></script>
+    <script src="/static/n2o_bt/js/textboxlist.js"></script>
 </body>
 </html>
