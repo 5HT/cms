@@ -12,14 +12,14 @@
 -define(PP_STATUS,      "CHECKOUTSTATUS").
 
 -define(PP_PAYMENTREQUEST(Total), [
-        {"PAYMENTREQUEST_0_ITEMAMT", wf:to_list(Total/100, [{decimals,2}])},
+        {"PAYMENTREQUEST_0_ITEMAMT", float_to_list(Total/100, [{decimals,2}])},
         {"PAYMENTREQUEST_0_TAXAMT", 0},
         {"PAYMENTREQUEST_0_HANDLINGAMT", 0},
         {"PAYMENTREQUEST_0_SHIPPINGAMT", 0},
         {"PAYMENTREQUEST_0_SHIPDISCAMT", 0},
         {"PAYMENTREQUEST_0_INSURANCEAMT", 0},
         {"PAYMENTREQUEST_0_PAYMENTACTION", "SALE"},
-        {"PAYMENTREQUEST_0_AMT", wf:to_list(Total/100, [{decimals,2}])},
+        {"PAYMENTREQUEST_0_AMT", float_to_list(Total/100, [{decimals,2}])},
         {"PAYMENTREQUEST_0_CURRENCYCODE", "USD"},
         {"ALLOWNOTE", 1},
         {"LOGOIMG", "http://igratch.synrc.com/static/img/logo.png"},
