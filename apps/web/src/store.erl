@@ -88,7 +88,7 @@ store_element(Id, P) ->
 
         #panel{class=["col-sm-2", "text-center"], body=[
             #h3{style="",
-                body=[#span{class=[fa,"fa-usd"]}, wf:to_list(P#product.price/100, [{decimals, 2}]) ]},
+                body=[#span{class=[fa,"fa-usd"]}, float_to_list(P#product.price/100, [{decimals, 2}]) ]},
             #link{class=[btn, "btn-warning"], body=[<<"add to cart">>], postback={add_cart, P}} ]} ]).
 
 

@@ -56,7 +56,7 @@ body()->
 
                 #panel{id=?USR_ORDER(State#feed_state.container_id), class=["col-sm-3"],
                        body=order_summary(State)} ]}]}]}
-    ] ++ index:footer() end.
+    ] end. %++ index:footer() end.
 
 order_summary(S)-> order_summary(S,false).
 
@@ -72,7 +72,7 @@ order_summary(#feed_state{visible_key=Visible}=S, Escape) ->
                 [#panel{body=[#b{body=if Escape -> wf:js_escape(Title);true -> Title end},
                     #span{class=["pull-right"], body=[
                     #span{class=["fa fa-usd"]},
-                    wf:to_list(Price/100, [{decimals,2}]) ]}]}
+                    float_to_list(Price/100, [{decimals,2}]) ]}]}
                 ], In+Price} end end,
         0, [Pid || Pid <- ordsets:from_list(case wf:cache(Visible) of undefined->[];I->I end)]),
 
@@ -87,7 +87,7 @@ order_summary(#feed_state{visible_key=Visible}=S, Escape) ->
         #panel{body=[
             #b{body= <<"Estimated total: ">>},
             #span{class=["pull-right"],
-                  body=[#i{class=["fa fa-usd"]}, wf:to_list(Total/100, [{decimals,2}])]} ]},
+                  body=[#i{class=["fa fa-usd"]}, float_to_list(Total/100, [{decimals,2}])]} ]},
         #hr{},
         #link{class=[btn, "btn-default", "btn-block", if Total == 0 -> disabled; true -> "" end],
             postback={checkout, Visible},
@@ -123,7 +123,7 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=cart}=State})
 
         #panel{class=["col-sm-3", "text-center"], body=[
             #h3{style="",
-                body=[#span{class=["fa fa-usd"]}, wf:to_list(P#product.price/100, [{decimals, 2}]) ]},
+                body=[#span{class=["fa fa-usd"]}, float_to_list(P#product.price/100, [{decimals, 2}]) ]},
                 #link{class=?BTN_INFO, body= <<"to wishlist">>, postback={to_wishlist, P, State}} ]}];
 
     {error,_} -> <<"item not available">> end);

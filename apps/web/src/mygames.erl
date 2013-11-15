@@ -54,7 +54,7 @@ render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=pro
                 #i{class=["fa fa-comment-alt", "fa-lg"]},
 
                 #i{class=["fa fa-usd", "fa-large"]},
-                #b{body=wf:to_list(P#product.price/100, [{decimals, 2}])}
+                #b{body=float_to_list(P#product.price/100, [{decimals, 2}])}
             ]} ]},
 
             #panel{id=?EN_MEDIA(UiId), class=["col-sm-4","media-pic"],

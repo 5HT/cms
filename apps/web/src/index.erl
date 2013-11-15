@@ -90,7 +90,7 @@ featured() ->
             #image{class=[Class], image=Cover}
           ]},
           #button{class=[btn, "btn-large", "btn-inverse", "btn-info", "btn-buy", win, buy],
-            body= [<<"Buy for ">>, #span{body= "$"++ wf:to_list(P#product.price/100, [{decimals, 2}]) }],
+            body= [<<"Buy for ">>, #span{body= "$"++ float_to_list(P#product.price/100, [{decimals, 2}]) }],
             postback={add_cart, P}}
         ]
       end || P <- Ps]

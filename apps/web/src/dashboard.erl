@@ -56,7 +56,7 @@ section(Id, Body, Icon, Class) ->
     #panel{class=["col-xs-1"], body=#h3{body=[#i{class=[fa, Icon]}]}},
     #panel{id=Id, class=["col-xs-11", "dashboard-unit"], body=Body} ]}.
 
-page({_,_,_}=Nav, Body)->
+page({_,Type,_}=Nav, Body)->
     wf:wire(off_canvas()),
     [#panel{class=[page], body=[
         index:header(),
@@ -65,5 +65,5 @@ page({_,_,_}=Nav, Body)->
                 #panel{class=[row, "row-offcanvas", "row-offcanvas-left"], body=[
                     #panel{id=sidenav, class=["col-xs-6", "col-sm-3", "sidebar-offcanvas"], role=navigation,
                         body=[sidenav(Nav)]},
-                    #panel{class=["col-xs-12","col-sm-9"], body=Body} ]} ]} ]} ]}] ++ index:footer();
+                    #panel{class=["col-xs-12","col-sm-9"], body=Body} ]} ]} ]} ]}]; %index:footer();
 page(_,_)->[].
