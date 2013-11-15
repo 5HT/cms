@@ -10,8 +10,10 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main()-> #dtl{file="prod", bindings=[{title,<<"my games">>},
+main()-> #dtl{file="dev", bindings=[{title,<<"my games">>},
                                      {body,body()},{css,?MYGAMES_CSS},{less,?LESS},{js,?MYGAMES_BOOTSTRAP}]}.
+
+navbar() -> profile:navbar().
 
 body()->
     User = wf:user(),
@@ -27,8 +29,7 @@ body()->
             InputState = case wf:cache({?FD_INPUT(Id),?CTX#context.module}) of undefined ->
                 IS = ?MYGAMES_INPUT(Id), wf:cache({?FD_INPUT(Id),?CTX#context.module}, IS), IS; IS -> IS end,
 
-            #feed_ui{title= <<"my games">>,
-                     icon="fa fa-gamepad",
+            #feed_ui{title= <<"products">>,
                      state=FeedState,
                      header=[ #input{state=InputState} ]} end).
 
@@ -54,7 +55,7 @@ render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=pro
                 #i{class=["fa fa-comment-alt", "fa-lg"]},
 
                 #i{class=["fa fa-usd", "fa-large"]},
-                #b{body=wf:to_list(P#product.price/100, [{decimals, 2}])}
+                #b{body=float_to_list(P#product.price/100, [{decimals, 2}])}
             ]} ]},
 
             #panel{id=?EN_MEDIA(UiId), class=["col-sm-4","media-pic"],

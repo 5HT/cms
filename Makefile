@@ -12,6 +12,7 @@ FILES        := apps/web/priv/static/n2o
 BOOTSTRAP    := apps/web/priv/static/bootstrap
 FONTAWESOME  := apps/web/priv/static/font-awesome
 N2O_BT       := apps/web/priv/static/n2o_bt
+FD_UI        := apps/web/priv/static/feed_ui
 LESSJS       := apps/web/priv/static/less.js
 
 default: compile static-link
@@ -22,9 +23,11 @@ static-link:
 	rm -rf $(FONTAWESOME)
 	rm -rf $(LESSJS)
 	rm -rf $(N2O_BT)
+	rm -rf $(FD_UI)
 	ln -sf ../../n2o_scripts $(N2O)
 	mkdir -p $(shell dirname $(FILES))
 	ln -sf ../../../../deps/n2o_bootstrap/priv/static $(N2O_BT)
+	ln -sf ../../../../deps/feed_server/priv/static $(FD_UI)
 	ln -sf ../../../../deps/n2o/priv/static/n2o $(FILES)
 	ln -sf ../../../../deps/bootstrap $(BOOTSTRAP)
 	ln -sf ../../../../deps/font-awesome $(FONTAWESOME)

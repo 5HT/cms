@@ -65,5 +65,5 @@ page({_,_,_}=Nav, Body)->
                 #panel{class=[row, "row-offcanvas", "row-offcanvas-left"], body=[
                     #panel{id=sidenav, class=["col-xs-6", "col-sm-3", "sidebar-offcanvas"], role=navigation,
                         body=[sidenav(Nav)]},
-                    #panel{class=["col-xs-12","col-sm-9"], body=Body} ]} ]} ]} ]}] ++ index:footer();
+                    #panel{class=["col-xs-12","col-sm-9", "dashboard-feed"], body=Body} ]} ]} ]} ]}] ++ index:footer();
 page(_,_)->[].
