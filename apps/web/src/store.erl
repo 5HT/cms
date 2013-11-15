@@ -27,36 +27,45 @@ body()->
                of undefined -> FS = ?PRODUCTS_FEED, wf:cache({?FEED(product),?CTX#context.module},FS), FS;
                           F -> F end,
 
-    index:header() ++ [
-    #section{class=[section], body=[
-        #panel{class=[container], body=[
-            #h4{class=["col-sm-12", "page-header-sm"], body=[
-                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}],
-                                           data_fields=?DATA_TAB},
-                #small{body= string:join([wf:to_list(wf:render(
-                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name],
-                          data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")} ]},
+    [#panel{class=[page], body=[
+        index:header(),
+        #panel{class=["page-wrapper"], body=[
+            #section{class=[section], body=[
+                #panel{class=[container], body=[
+                        #h1{class=["page-header"],body=[
+                            #link{url="#all", body= <<"Categories">>, data_fields=?DATA_TAB},
+                            #small{body= string:join([wf:to_list(wf:render(
+                                #link{url="#"++wf:to_list(Fid),body=Name, data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")}
+                        ]},
 
-            #panel{class=[row], body=[
-                #panel{class=["col-sm-9", "tab-content"], body=[
-                    #panel{id=all, class=["tab-pane", active], body=[
-                        #feed_ui{icon=[fa, "fa-home ", "fa-lg ", "text-warning"],
-                                icon_url="#all",
-                                title=[],
-                                state=All}]},
-                    [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
-                #panel{class=["col-sm-3"]}]} ]} ]} ] ++ index:footer().
+                    #panel{class=["tab-content"], body=[
+                        #panel{id=all, class=["tab-pane", active, products, "items-list"], body=[
+                            #feed_ui{icon=[fa, "fa-home ", "fa-lg ", "text-warning"], icon_url="#all", state=All}
+                        ]},
+                        [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]}
+                ]} ]},
+
+            #section{class=[section, alt, "pattern-45-degree-fabric"], body=[
+                #panel{class=[container], body=[
+                    #panel{class=[jumbotron, "text-center"], body=[
+                        #h1{body= <<"Got a question?">>},
+                        #p{body= <<"want to work with us to move your bussines to the next level? Well, dont be afraid">>},
+                        #button{class=[btn, "btn-lg", "btn-info"], body= <<"contact us">>} ]} ]} ]}
+
+        ]}]}] ++ index:footer().
 
 %% Render store elements
 render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=store}=State}) ->
-    case kvs:get(product, E#entry.entry_id) of {error, _} -> wf:render(#panel{body= <<"error displaying item">>});
-    {ok, P} ->
-        Id = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, P))),
-        store_element(Id, P) end;
+    case kvs:get(product, E#entry.entry_id) of
+        {error, _} -> wf:render(#panel{body= <<"error displaying item">>});
+        {ok, P} -> store_element(wf:to_list(erlang:phash2(element(State#feed_state.entry_id, P))), P) end;
 
 render_element(#div_entry{entry=#product{}=P, state=#feed_state{view=store}}) ->
-    Id = wf:to_list(erlang:phash2(element(#product.id, P))),
-    store_element(Id, P);
+    store_element(wf:to_list(erlang:phash2(element(#product.id, P))), P);
+
+render_element(#entry_media{media=[#media{}=Media|_]}) ->
+    I = feed_ui:image(Media, "370x250"),
+    element_image:render_element(I);
 
 render_element(E)-> error_logger:info_msg("[store] render -> feed_ui"),feed_ui:render_element(E).
 
@@ -68,28 +77,29 @@ store_element(Id, P) ->
         {error, _} -> {P#product.owner,P#product.owner} end,
 
     wf:render([
-        #panel{class=["col-sm-2", "article-meta"], body=[
-            #panel{body=[
-                #link{body=From, url= "/profile?id="++wf:to_list(FromId)},
-                #panel{body= short_date(P#product.created)} ]},
-            #p{body=[#link{body=[#i{class=[fa, "fa-windows", "fa-lg"]}]}]},
-            #p{body=[#link{url="#",body=[
-                #span{class=[?EN_CM_COUNT(Id)], body=
-                    integer_to_list(kvs_feed:comments_count(product, P#product.id))},
-                #i{class=[fa, "fa-comment-alt", "fa-2x"]} ]} ]} ]},
+        #link{body=
+            #figure{class=[product, "thumbnail-figure"], body=[
+                #panel{id=?EN_MEDIA(Id), style= <<"width:370px;height:250px;">>, body=#entry_media{media=Media, mode=store, module=store}},
+                #figcaption{class=["product-caption"], body=[
+                    #panel{class=["product-title", "thumbnail-title" ], body=[
+                        #h3{id=?EN_TITLE(Id), body=#span{body=P#product.title}},
+                        #p{id=?EN_DESC(Id), body=index:shorten(P#product.brief)} ]},
+                    #span{class=[badges],body=[
+                        #p{body=[#link{url="#",body=[
+                            #span{class=[?EN_CM_COUNT(Id)], body=
+                                integer_to_list(kvs_feed:comments_count(product, P#product.id))},
+                            #i{class=[fa, "fa-comment-alt", "fa-2x"]} ]} ]} ]}
+                ]},
 
-        #panel{id=?EN_MEDIA(Id), class=["col-sm-3", "media-pic"], body=#entry_media{media=Media, mode=store}},
-
-        #panel{class=["col-sm-5", "article-text"], body=[
-            #h3{body=#span{id=?EN_TITLE(Id), class=[title], body=
-                #link{style="color:#9b9c9e;", body=P#product.title, url=?URL_PRODUCT(P#product.id)}}},
-
-            #p{id=?EN_DESC(Id), body=index:shorten(P#product.brief)} ]},
-
-        #panel{class=["col-sm-2", "text-center"], body=[
-            #h3{style="",
-                body=[#span{class=[fa,"fa-usd"]}, wf:to_list(P#product.price/100, [{decimals, 2}]) ]},
-            #link{class=[btn, "btn-warning"], body=[<<"add to cart">>], postback={add_cart, P}} ]} ]).
+                #panel{class=["well","pricing-table", "product-price", span3, "text-center"], body=[
+                    #h2{class=["pricing-table-price", "product-price-price"], body=[
+                        #span{class=[fa,"fa-usd"]}, float_to_list(P#product.price/100, [{decimals, 2}]) 
+                    ]},
+                    #button{class=[btn, "btn-large"], body= <<"add to cart">>, postback={add_cart, P}}
+                ]}
+            ]}
+        }
+    ]).
 
 
 % Events
