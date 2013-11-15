@@ -44,7 +44,6 @@ body() ->
     #panel{class=[page], body=[
         header(),
         #panel{class=["page-wrapper"],body=[
-            "xyu",
             #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
             #section{class=[container], body=[
                 #h3{body=[
