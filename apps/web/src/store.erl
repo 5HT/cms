@@ -101,7 +101,6 @@ store_element(Id, P) ->
         }
     ]).
 
-
 % Events
 
 api_event(tabshow,Args,_) ->

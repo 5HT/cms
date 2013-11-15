@@ -40,32 +40,29 @@ body() ->
     Discus = case wf:cache({?FEED(comment),?CTX#context.module}) of undefined ->
         AS= ?ACTIVE_FEED, wf:cache({?FEED(comment),?CTX#context.module}, AS),AS; A->A end,
 
-    [#panel{class=[page], body=[
+    [
+    #panel{class=[page], body=[
         header(),
         #panel{class=["page-wrapper"],body=[
-        #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
-
-        #section{class=[container], body=[
-            #panel{class=[row], body=[
+            #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
+            #section{class=[container], body=[
+                #h3{body=[
+                    [ #link{url="#"++wf:to_list(F), body=[" ",N],data_fields=?DATA_TAB} || {N,F} <- Groups ],
+                    " or ",
+                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB} ]},
                 #panel{class=["col-md-8", "tab-content"], body=[
                     #panel{id=all, class=["tab-pane", active], body=[
-                        #feed_ui{title= <<"Reviews">>, icon=[fa, "fa-tags "], state=All}]},
+                        #feed_ui{title= <<"Reviews">>, icon=[fa, "fa-tags "], state=All#feed_state{delegate=index}}]},
                     [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
                 #aside{class=["col-md-4"], body=[
-                    #panel{class=["row"], body=[
-                        #h4{class=[blue], body=#link{url="#all",body= <<"tags">>,data_fields=?DATA_TAB}},
-                        #p{class=[inline, tagcloud], body=[
-                            [#link{url="#"++wf:to_list(Fid), body=[<<" ">>,Name],data_fields=?DATA_TAB}
-                                || {Name, Fid} <- Groups]]}]},
-
                     #feed_ui{title= <<"Active discussion">>,
                             icon=[fa, "fa-comments-o"],
                             class="comments-flat",
-                            state=Discus} ]}]}]} ]} ]}] ++ footer().
+                            state=Discus} ]} ]} ]} ]} ] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
-            state=(wf:cache({Fid,?CTX#context.module}))#feed_state{js_escape=true}}.
+            state=(wf:cache({Fid,?CTX#context.module}))#feed_state{js_escape=true,delegate=index}}.
 
 featured() ->
   #carousel{class=["product-carousel"], items=case kvs:get(group, "featured") of
@@ -90,7 +87,7 @@ featured() ->
             #image{class=[Class], image=Cover}
           ]},
           #button{class=[btn, "btn-large", "btn-inverse", "btn-info", "btn-buy", win, buy],
-            body= [<<"Buy for ">>, #span{body= "$"++ wf:to_list(P#product.price/100, [{decimals, 2}]) }],
+            body= [<<"Buy for ">>, #span{body= "$"++ float_to_list(P#product.price/100, [{decimals, 2}]) }],
             postback={add_cart, P}}
         ]
       end || P <- Ps]
@@ -225,6 +222,31 @@ shorten(Input) when is_binary(Input) ->
 
     lists:foldl(fun({Pt, Re}, Subj) ->
         re:replace(Subj, Pt, Re, [global, {return, binary}]) end, Input, R).
+
+render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State}) ->
+
+    Id = element(State#feed_state.entry_id, E),
+    UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
+    {FromId, From} = case kvs:get(user, E#entry.from) of 
+                          {ok, User} -> {E#entry.from, User#user.display_name};
+                          {error, _} -> {E#entry.from,E#entry.from} end,
+
+    wf:render([#panel{class=["col-sm-3", "article-meta"], body=[
+        #h3{class=[blue], body= <<"">>},
+        #p{class=[username], body= #link{body=From, url= "/profile?id="++wf:to_list(FromId)}},
+        #panel{body= index:to_date(E#entry.created)},
+        #p{body=[
+            #link{url=?URL_REVIEW(Eid),body=[#span{class=[?EN_CM_COUNT(UiId)],
+                body= integer_to_list(kvs_feed:comments_count(entry, Id))},
+                #i{class=[fa,"fa-comment-alt", "fa-2x"]} ]} ]}]},
+
+        #panel{class=["col-sm-5", "article-text"], body=[
+            #h3{body=#span{id=?EN_TITLE(UiId), class=[title], body=
+                #link{style="color:#9b9c9e;", body=E#entry.title, url=?URL_REVIEW(Eid)}}},
+
+            #p{id=?EN_DESC(UiId), body=index:shorten(E#entry.description)},
+            #panel{id=?EN_TOOL(UiId), class=[more], body=[
+                #link{body=[<<"read more">>], url=?URL_REVIEW(Eid)} ]}]}]).
 
 to_date(undefined) -> to_date(now());
 to_date(Date)->

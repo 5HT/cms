@@ -17,7 +17,7 @@ body()->
 
     Nav = {wf:user(), direct, subnav()},
     dashboard:page(Nav,
-        #panel{class=["col-sm-9", "tab-content", "dash-tab-content"], body=[
+        #panel{class=["col-sm-9", "tab-content"], body=[
             #panel{id=direct, class=["tab-pane", active], body=feed(direct, false)},
             [#panel{id=Id, class=["tab-pane"]} || Id <- [sent,archive]]] }).
 

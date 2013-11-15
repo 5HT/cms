@@ -167,7 +167,7 @@ render_element(#row_entry{entry=#payment{id=Id, product_id=Pid}=Py}) -> wf:rende
     #td{body= #small{body=Id}},
     #td{body= #small{body=Py#payment.external_id}},
     #td{body= [#link{url=?URL_PRODUCT(Pid), body= Py#payment.product#product.title }]},
-    #td{body= [#i{class=["fa fa-usd"]}, wf:to_list(Py#payment.product#product.price/100, [{decimals,2}])]},
+    #td{body= [#i{class=["fa fa-usd"]}, float_to_list(Py#payment.product#product.price/100, [{decimals,2}])]},
     #td{class=[case Py#payment.state of done -> "text-success"; added-> "text-warning"; _-> "text-error" end],
         body= [atom_to_list(Py#payment.state)]}]);
 
@@ -245,7 +245,7 @@ event({show_payment, prd, Id}) ->
           #td{body=[index:to_date(Py#payment.start_time)]},
           #td{class=[case Py#payment.state of done -> "text-success"; added-> "text-warning"; _-> "text-error" end],
                 body= [atom_to_list(Py#payment.state)]},
-          #td{body=[#span{class=["fa fa-usd"]}, wf:to_list(Price/100, [{decimals, 2}])]},
+          #td{body=[#span{class=["fa fa-usd"]}, float_to_list(Price/100, [{decimals, 2}])]},
           #td{body=#link{body=User, url= ?URL_PROFILE(User)}}]}
       end || #payment{user_id=User, product=#product{price=Price}} = Py
         <- kvs:all_by_index(payment, product_id, Id) ]]} );
