@@ -40,28 +40,25 @@ body() ->
     Discus = case wf:cache({?FEED(comment),?CTX#context.module}) of undefined ->
         AS= ?ACTIVE_FEED, wf:cache({?FEED(comment),?CTX#context.module}, AS),AS; A->A end,
 
-    [#panel{class=[page], body=[
+    [
+    #panel{class=[page], body=[
         header(),
         #panel{class=["page-wrapper"],body=[
-        #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
-
-        #section{class=[container], body=[
-            #panel{class=[row], body=[
+            #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
+            #section{class=[container], body=[
+                #h3{body=[
+                    [ #link{url="#"++wf:to_list(F), body=[" ",N],data_fields=?DATA_TAB} || {N,F} <- Groups ],
+                    " or ",
+                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB} ]},
                 #panel{class=["col-md-8", "tab-content"], body=[
                     #panel{id=all, class=["tab-pane", active], body=[
                         #feed_ui{title= <<"Reviews">>, icon=[fa, "fa-tags "], state=All}]},
                     [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
                 #aside{class=["col-md-4"], body=[
-                    #panel{class=["row"], body=[
-                        #h4{class=[blue], body=#link{url="#all",body= <<"tags">>,data_fields=?DATA_TAB}},
-                        #p{class=[inline, tagcloud], body=[
-                            [#link{url="#"++wf:to_list(Fid), body=[<<" ">>,Name],data_fields=?DATA_TAB}
-                                || {Name, Fid} <- Groups]]}]},
-
                     #feed_ui{title= <<"Active discussion">>,
                             icon=[fa, "fa-comments-o"],
                             class="comments-flat",
-                            state=Discus} ]}]}]} ]} ]}] ++ footer().
+                            state=Discus} ]} ]} ]} ]} ] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
