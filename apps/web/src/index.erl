@@ -118,8 +118,7 @@ header() ->
             kvs_acl:check_access(User#user.email, {feature, reviewer}) == allow,
             kvs_acl:check_access(User#user.email, {feature, developer}) == allow} end,
 
-    [
-    #header{class=[navbar, "navbar-default","navbar-fixed-top"], role=navigation, body=[
+    [#header{class=[navbar, "navbar-default","navbar-fixed-top"], role=navigation, body=[
         #panel{class=["container"], body=[
             #panel{class=["navbar-header"], body=[
                 #button{class=[btn, "navbar-toggle"], data_fields=?DATA_COLLAPSE,
@@ -170,9 +169,7 @@ header() ->
                             #li{body=#link{id=logoutbtn, postback=logout, delegate=login,
                                 body=[#i{class=[fa, "fa-power-off", "fa-lg", "fa-fw"]}, <<"&nbsp;Logout">>
                                 ]}}]}]}] end }]}]}]},
-    #panel{class=[container], style="padding-top:80px;", body=[
-        #panel{id=?PAGE_ALERT({?CTX#context.module, User#user.email})}
-    ]} ].
+    #panel{id=?PAGE_ALERT({?CTX#context.module, User#user.email}), class=["page-alert"]}].
 
 footer() -> [ #dtl{file = "tl", ext="dtl", bindings=[]} ].
 
@@ -180,10 +177,10 @@ success(Msg)-> alert(Msg, "alert-success").
 error(Msg)  -> alert(Msg,"alert-danger").
 info(Msg)   -> alert(Msg,"alert-info").
 warn(Msg)   -> alert(Msg,"alert-warning").
-alert(Msg, Class)->
-    #panel{class=[alert, Class, "alert-block", "alert-dismissable"], body=[
+alert(Msg, Class)-> #panel{class=[Class], body=[
+    #panel{class=[container, alert, "alert-block", "alert-dismissable"], body=[
         #button{class=[close], data_fields=[{<<"data-dismiss">>,<<"alert">>}], body= <<"&times;">>},
-        #panel{body= Msg} ]}.
+        #panel{class=[<<"text-center">>],body=Msg} ]} ]}.
 
 alert_inline(Msg) ->
     #span{class=[alert, fade, in, "alert-danger"],
