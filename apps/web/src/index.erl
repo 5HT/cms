@@ -44,6 +44,7 @@ body() ->
     #panel{class=[page], body=[
         header(),
         #panel{class=["page-wrapper"],body=[
+            "xyu",
             #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
             #section{class=[container], body=[
                 #h3{body=[
@@ -169,7 +170,7 @@ header() ->
                             #li{body=#link{id=logoutbtn, postback=logout, delegate=login,
                                 body=[#i{class=[fa, "fa-power-off", "fa-lg", "fa-fw"]}, <<"&nbsp;Logout">>
                                 ]}}]}]}] end }]}]}]},
-    #panel{class=[container], body=[
+    #panel{class=[container], style="padding-top:80px;", body=[
         #panel{id=?PAGE_ALERT({?CTX#context.module, User#user.email})}
     ]} ].
 
