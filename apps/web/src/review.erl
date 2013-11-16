@@ -105,49 +105,48 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=detached}=Sta
 
 render_element(#div_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{}=State})->
     Id = element(State#feed_state.entry_id, C),
-    {Author, Avatar} = case kvs:get(user, C#comment.from) of
-      {ok, User} -> {User#user.display_name, case User#user.avatar of
-        undefined-> #image{class=["media-objects","img-circle"], image= <<"holder.js/64x64">>};
-        Img-> #image{class=["media-object", "img-circle", "img-polaroid"], 
-                    image=iolist_to_binary([Img,"?sz=50&width=50&height=50&s=50"]),
-                    width= <<"50px">>, height= <<"50px">>} end};
-      {error, _}-> {<<"John">> ,#image{class=["media-objects","img-circle"], image= <<"holder.js/64x64">>}} end,
+    {Author, Img} = case kvs:get(user, C#comment.from) of
+        {ok, #user{avatar=Av, display_name=Name}} -> {Name, ?URL_AVATAR(Av, "50")};
+        _ -> {<<"John">>, ?URL_AVATAR(undefined, "50")} end,
 
+    Avatar = #image{class=["img-circle", "img-thumbnail"],width= <<"50px">>,height= <<"50px">>,image=Img},
     Date = index:to_date(C#comment.created),
 
     InnerFeed = case lists:keyfind(comments,1,C#comment.feeds) of false -> [];
     {_, Fid} ->
-        Recipients = lists:flatmap(fun({Route,Type,{Ei,ECfid}}) ->
+        Recipients = if State#feed_state.flat_mode -> [];
+        true -> lists:flatmap(fun({Route,Type,{Ei,ECfid}}) ->
             case kvs:get(comment, {Id, Ei, ECfid}) of {error,_} -> [];
             {ok, #comment{feeds=Feeds}} ->
                 case lists:keyfind(comments,1,Feeds) of false -> [];
-                {_,CCFid} -> [{Route, Type, {Ei, CCFid}}] end end end, State#feed_state.recipients),
+                {_,CCFid} -> [{Route, Type, {Ei, CCFid}}] end end end, State#feed_state.recipients) end,
 
-        InputState = ?REPLY_INPUT(Fid, Recipients)#input_state{entry_id=Eid},
-        wf:cache({?FD_INPUT(Fid),?CTX#context.module}, InputState),
+        Input = if State#feed_state.flat_mode -> [];
+        true ->
+            InputState = ?REPLY_INPUT(Fid, Recipients)#input_state{entry_id=Eid},
+            wf:cache({?FD_INPUT(Fid),?CTX#context.module}, InputState),
+            #input{state=InputState, class=["comment-reply"]} end,
 
-        CmState = ?FD_STATE(Fid, State)#feed_state{
-            js_escape = false,
-            recipients = Recipients,
-            show_title = false,
-            show_header= State#feed_state.show_header andalso not State#feed_state.flat_mode},
-        wf:cache({Fid, ?CTX#context.module}, CmState),
+            CmState = ?FD_STATE(Fid, State)#feed_state{
+                js_escape = false,
+                recipients = Recipients,
+                show_title = false,
+                show_header= State#feed_state.show_header andalso not State#feed_state.flat_mode},
+            wf:cache({Fid, ?CTX#context.module}, CmState),
 
-        #feed_ui{
-            class="comments",
-            state=CmState,
-            header=[#input{state=InputState, class=["comment-reply"]}]} end,
+            #feed_ui{class="comments", state=CmState, header=Input} end,
 
-    wf:render([#panel{class=[media, "media-comment"], body=[
-        #link{class=["pull-left"], body=[Avatar], url=?URL_PROFILE(C#comment.from)},
-        #panel{class=["media-body"], body=[
-            #p{class=["media-heading"], body=[#link{body= Author,
-                                                    url=?URL_PROFILE(C#comment.from)}, <<",">>, Date ]},
-            #p{body=C#comment.content},
-            if State#feed_state.flat_mode == true -> [];
+        wf:render([#panel{class=[media, "media-comment"], body=[
+            #link{class=["pull-left"], body=[Avatar], url=?URL_PROFILE(C#comment.from)},
+            #panel{class=["media-body"], body=[
+                #p{class=["media-heading"], body=[
+                    #link{body= Author, url=?URL_PROFILE(C#comment.from)}, <<",">>, Date ]},
+                #p{body=C#comment.content},
+
+                if State#feed_state.flat_mode == true -> [];
                 true -> #p{class=["media-heading"], body=[InnerFeed]} end ]} ]},
 
-        if State#feed_state.flat_mode == true -> InnerFeed; true -> [] end]);
+        if State#feed_state.flat_mode -> InnerFeed; true -> [] end]);
 
 render_element(E)-> feed_ui:render_element(E).
 

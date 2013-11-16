@@ -36,6 +36,8 @@
 % Index 
 
 -define(ACTIVE_FEED, ?FD_STATE(?FEED(comment))#feed_state{  flat_mode=true,
+                                                            enable_selection=false,
+                                                            enable_traverse = false,
                                                             view=comment,
                                                             delegate=review,
                                                             entry_type=comment,

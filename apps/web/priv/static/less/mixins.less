@@ -7,3 +7,23 @@
        -o-transform: skew(@x) rotate(@y);
           transform: skew(@x) rotate(@y);
 }
+
+.gradient-bar(@primaryColor, @secondaryColor, @textColor: #fff, @textShadow: 0 -1px 0 rgba(0,0,0,.25)) {
+    color: @textColor;
+    text-shadow: @textShadow;
+    #gradient > .vertical(@primaryColor, @secondaryColor);
+    border-color: @secondaryColor @secondaryColor darken(@secondaryColor, 15%);
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+    .reset-filter();
+
+    &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+        color: @textColor;
+        background-color: @secondaryColor;
+        *background-color: darken(@secondaryColor, 5%);
+    }
+
+    &:active,
+    &.active {
+        background-color: darken(@secondaryColor, 10%) e("\9");
+    }
+}

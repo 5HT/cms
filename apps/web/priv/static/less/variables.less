@@ -1,5 +1,5 @@
 @fa-font-path:        "../font-awesome/fonts";
-@btn-gplus-bg:   #cc3732;
+
 @azure:                      #6bc7e1;
 @dark-azure:                 #41b7d8;
 
@@ -14,12 +14,17 @@
     font-style:normal
 }
 
-@font-size-base:          14px;
+@font-size-base:            14px;
+@font-size-large:         ceil(@font-size-base * 1.7); // ~25px
 @font-family-serif:       "Nokia Pure Text", Arial, serif;
 @font-family-base:        @font-family-serif;
 @headings-font-family:    "Nokia Pure Text", Arial, serif;
 @headings-font-weight:    800;
 @headings-line-height:    1.1;
+
+@border-radius-base:             0;
+@border-radius-large:            0;
+@border-radius-small:            0;
 
 // Links
 // -------------------------
@@ -48,3 +53,43 @@
 @prod-list-bg:          @gray-lighter;
 @prod-bg:               #fff;
 @review-bg:             #fff;
+
+
+
+// Buttons
+@btn-font-weight:                normal;
+
+@btn-default-color:              #333;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #ccc;
+@btn-default-bg-hl:              darken(#fff, 10%);
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-bg-hl:              spin(@brand-primary, 20%);
+@btn-primary-border:             darken(@btn-primary-bg, 5%);
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-bg-hl:              #51a351;
+@btn-success-border:             darken(@btn-success-bg, 5%);
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-bg-hl:              darken(@brand-warning, 10%);
+@btn-warning-border:             darken(@btn-warning-bg, 5%);
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-bg-hl:               #bd362f;
+@btn-danger-border:              darken(@btn-danger-bg, 5%);
+
+@btn-info-color:                 #fff;
+@btn-info-bg:                    @brand-info;
+@btn-info-bg-hl:                 #2f96b4;
+@btn-info-border:                darken(@btn-info-bg, 5%);
+
+@btn-gplus-bg:                   #cc3732;
+@btn-gplus-bg-hl:                #e74b37;
+
+@btn-link-disabled-color:        @gray-light;

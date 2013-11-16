@@ -12,7 +12,10 @@ main() ->
         bindings=[{title,<<"Login">>},{body, body()},{css,?LOGIN_CSS},{less,?LESS},{js,?LOGIN_BOOTSTRAP}]} ].
 
 body() ->
-    index:header() ++ [#section{class=[section], body=[
+    [#panel{class=[page], body=[
+        index:header(),
+        #panel{class=["page-wrapper"],body=[
+        #section{class=[section, alt, "theme-pattern-lightmesh"], body=[
         #panel{class=[container], body=[
             #panel{class=[modal, fade, in, "modal-login"], body=[
                 #panel{class=["modal-dialog"], body=[
@@ -41,7 +44,7 @@ body() ->
                                         #password{id=pass, class=["form-control"]}]}]}]}]}]},
 
                         #panel{class=["modal-footer"], body=[avz:buttons([email]) ]} ]} ]} ]} ]} ]}
-    ] ++ index:footer() ++ avz:sdk(?LOGIN).
+    ]}]}] ++ index:footer() ++ avz:sdk(?LOGIN).
 
 event(init) -> wf:reg(?MAIN_CH), [];
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
