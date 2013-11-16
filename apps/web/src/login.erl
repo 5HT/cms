@@ -15,7 +15,7 @@ body() ->
     [#panel{class=[page], body=[
         index:header(),
         #panel{class=["page-wrapper"],body=[
-        #section{class=[section], body=[
+        #section{class=[section, alt, "theme-pattern-lightmesh"], body=[
         #panel{class=[container], body=[
             #panel{class=[modal, fade, in, "modal-login"], body=[
                 #panel{class=["modal-dialog"], body=[
