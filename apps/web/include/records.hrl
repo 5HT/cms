@@ -49,6 +49,8 @@
 -define(URL_PRODUCT(Id),"/product?id="++wf:to_list(Id)).
 -define(URL_REVIEW(Id), "/review?id="++wf:to_list(Id)).
 -define(URL_PROFILE(Id),"/profile?id="++wf:to_list(Id)).
+-define(URL_AVATAR(Url, Size),  iolist_to_binary([case Url of undefined-> "holder.js/"++Size++"x"++Size;_-> Url end,
+                                "?sz=",Size,"&width=",Size,"&height=",Size,"&s=",Size])).
 
 -record(struct,         {lst=[]}).
 -record(product_hero,   {?ELEMENT_BASE(product), product}).

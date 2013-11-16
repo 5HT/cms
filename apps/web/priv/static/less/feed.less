@@ -5,38 +5,41 @@
     }
 }
 
-.feed {
-    overflow: hidden;
-
+.fd-ui {
     &.comments-flat{
         background: #fff;
         .box-shadow(0 2px 3px 1px rgba(0,0,0,.1));
-        margin-left:0px;
+        margin:0 0 50px 0;
         padding-bottom: 5px;
 
-        & .row-fuid{
-            margin: 0 0;
-        }
-
-        & .article{
-            margin: 0;
-            padding:0;
-        }
-
-        & .feed-title {
+        & .fd-title{
             border-bottom: 1px solid #079ebd;
-            margin-bottom: 5px;
-            & i {color: #079ebd;}
-        }
-    }
-    & .comments {
+            margin:0 0 5px;
 
-        & .article {
-            border:none;
+            .fd-title-i{
+                font-size: @font-size-h4;
+                font-weight: @headings-font-weight;
+                padding:0;
+            }
         }
-        & .btn-toolbar{
-            font-size:initial;
-            margin-bottom:0;
+
+        & .fd-entry{
+            margin:0;
+            padding:0;
+            border-bottom:2px solid #ffffff;
+            border-bottom-style: groove;
+
+            & .fd-entry-container{ .make-sm-column(12, @gutter:0px); }
+            img {max-width:100%;}
+            & .fd-entry-container{ & .media-body{overflow:initial;} }
+        }
+        & .fd-body{padding-bottom:0; }
+
+        & .comments{ & .fd-body{} }
+    }
+    &.comments{
+        & .fd-body{
+            padding-bottom:0;
         }
     }
 }

@@ -55,10 +55,7 @@ body() ->
                         #feed_ui{title= <<"Reviews">>, icon=[fa, "fa-tags "], state=All#feed_state{delegate=index}}]},
                     [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
                 #aside{class=["col-md-4"], body=[
-                    #feed_ui{title= <<"Active discussion">>,
-                            icon=[fa, "fa-comments-o"],
-                            class="comments-flat",
-                            state=Discus} ]} ]} ]} ]} ] ++ footer().
+                    #feed_ui{title= <<"Active discussion">>, class="comments-flat", state=Discus}]}]}]}]}] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
@@ -248,4 +245,4 @@ render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=r
 to_date(undefined) -> to_date(now());
 to_date(Date)->
   {{Y, M, D}, {H,Mi,_}} = calendar:now_to_datetime(Date),
-  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi ]).
+  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi]).

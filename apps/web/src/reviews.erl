@@ -26,23 +26,25 @@ body()->
     All = case wf:cache({?FEED(entry),?CTX#context.module}) of undefined ->
         FS = ?ENTRIES_FEED, wf:cache({?FEED(entry),?CTX#context.module},FS), FS; F->F end,
 
-    index:header() ++ [
-    #section{class=[section], body=[
-        #panel{class=[container], body=[
-            #h4{class=["col-sm-12", "page-header-sm"], body=[
-                #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}],
+    [#panel{class=[page], body=[
+        index:header(),
+        #panel{class=["page-wrapper"], body=[
+            #section{class=[section], body=[
+                #panel{class=[container], body=[
+                    #h4{class=["col-sm-12", "page-header-sm"], body=[
+                        #link{url="#all", body=[#i{class=[fa, "fa-home", "fa-lg", "text-warning"]}],
                                            data_fields=?DATA_TAB},
-                #small{body= string:join([wf:to_list(wf:render(
-                    #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name],
-                          data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")} ]},
+                        #small{body= string:join([wf:to_list(wf:render(
+                        #link{url="#"++wf:to_list(Fid),body=[#i{class=[fa, "fa-asterisk"]}, Name],
+                            data_fields=?DATA_TAB})) || {Name,Fid} <- Groups], " / ")} ]},
 
-            #panel{class=[row], body=[
-                #panel{class=["col-sm-9", "tab-content"], body=[
-                    #panel{id=all, class=["tab-pane", active], body=[
-                        #feed_ui{icon=[fa, "fa-tags ", "fa-lg ", "text-warning"], state=All} ]},
+                    #panel{class=[row], body=[
+                        #panel{class=["col-sm-9", "tab-content"], body=[
+                            #panel{id=all, class=["tab-pane", active], body=[
+                                #feed_ui{icon=[fa, "fa-tags ", "fa-lg ", "text-warning"], state=All} ]},
 
-                    [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups] ]},
-                #panel{class=["col-sm-3"], body=[<<"">>]} ]} ]}]} ] ++ index:footer().
+                            [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups] ]},
+                        #panel{class=["col-sm-3"], body=[<<"">>]} ]} ]}]} ]}]}] ++ index:footer().
 
 %% Render review elements
 
