@@ -11,7 +11,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main() -> #dtl{file="prod", bindings=[{title,<<"product">>}, {body, body()},
+main() -> #dtl{file="prod", bindings=[{title,<<"Product">>}, {body, body()},
                                       {css,?PRODUCT_CSS}, {less,?LESS}, {js, ?PRODUCT_BOOTSTRAP}]}.
 
 -define(FILE_DIR, "static/"++ case wf:user() of undefined-> "anonymous"; User -> User#user.email end ++"/files").

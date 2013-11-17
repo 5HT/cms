@@ -16,7 +16,7 @@ on_shown(Type) ->
     X = jq("a[data-toggle=\""+Type+"\"]"),
     X:on("shown.bs.tab", fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
 
-main() -> #dtl{file = "prod", ext="dtl", bindings=[ {title, <<"esprit">>},
+main() -> #dtl{file = "prod", ext="dtl", bindings=[ {title, <<"Countach">>},
                                                     {body, body()},
                                                     {css,?INDEX_CSS},{less,?LESS},{js,?INDEX_BOOTSTRAP}]}.
 body() ->

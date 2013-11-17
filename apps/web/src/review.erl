@@ -9,7 +9,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main() -> #dtl{file="prod", bindings=[{title,<<"review">>},
+main() -> #dtl{file="prod", bindings=[{title,<<"Review">>},
                                       {body, body()},{css,?REVIEW_CSS},{less,?LESS},{js, ?REVIEW_BOOTSTRAP}]}.
 
 body() ->

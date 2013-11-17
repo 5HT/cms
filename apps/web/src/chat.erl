@@ -6,7 +6,7 @@
 
 main() -> 
   [ #dtl{file = wf:cache(mode), ext="dtl",
-         bindings=[{title,<<"Login">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]} ].
+         bindings=[{title,<<"Chat">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]} ].
 
 items() ->
     Link1 = {[{name, "Amazon"}, {url, "http://amazon.com"}]},

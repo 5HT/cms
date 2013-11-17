@@ -12,7 +12,7 @@
 -include("states.hrl").
 
 main()-> #dtl{file="prod",
-              bindings=[{title,<<"admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
+              bindings=[{title,<<"Admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
 
 body() ->
     User = case wf:user() of undefined -> #user{}; U -> U end,

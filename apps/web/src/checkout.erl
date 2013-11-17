@@ -10,7 +10,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main()-> #dtl{file="prod", bindings=[{title,<<"Confirm Order">>},
+main()-> #dtl{file="prod", bindings=[{title,<<"Checkout">>},
                                      {body, body()},{css,?CHECKOUT_CSS},{less,?LESS},{js,?CHECKOUT_BOOTSTRAP}]}.
 
 body() ->
