@@ -135,7 +135,8 @@ header() ->
                     #li{body=#link{url= <<"/login">>, body= <<"Sign In">> }};
                 _ -> [
                     #li{body=[#link{url= <<"/cart">>, body=[
-                        #span{id=onlinenumber},
+                        #span{body="Online: "},
+                        #span{id=onlinenumber,body=" "},
                         #span{class=["fa-stack", "fa-lg"], body=[
                             #span{id=?USR_CART(User#user.id), class=["cart-number", "fa-stack-2x"], body= case CartFeed of
                                                 {error,_} -> <<"?">>;
