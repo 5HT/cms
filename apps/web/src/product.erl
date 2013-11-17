@@ -264,6 +264,7 @@ event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event({add_cart, P}) ->
     store:event({add_cart, P}),
     wf:redirect("/cart");
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 api_event(tabshow,Args,_) ->

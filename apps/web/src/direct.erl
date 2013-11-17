@@ -104,6 +104,8 @@ event({archive, #feed_state{selected_key=Selected, visible_key=Visible}}) ->
 
             msg:notify( [kvs_feed, User#user.email, entry, delete], [E])
         end || {Eid,_}=Id <- wf:cache(Visible), sets:is_element(wf:to_list(erlang:phash2(Id)), Selection)] end;
+
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery(R,M) ->

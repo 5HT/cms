@@ -47,15 +47,16 @@ body() ->
             #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
             #section{class=[container], body=[
                 #h3{body=[
-                    [ #link{url="#"++wf:to_list(F), body=[" ",N],data_fields=?DATA_TAB} || {N,F} <- Groups ],
+                    string:join([ [#link{url="#"++wf:to_list(F), body=N,data_fields=?DATA_TAB}] || {N,F} <- Groups ]," "),
                     " or ",
-                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB} ]},
+                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB}, " ",
+                    #link{url="#mine",body= <<"Mine">>,data_fields=?DATA_TAB} ]},
                 #panel{class=["col-md-8", "tab-content"], body=[
                     #panel{id=all, class=["tab-pane", active], body=[
                         #feed_ui{title= <<"">>, icon=[fa, "fa-tags "], state=All#feed_state{delegate=index}}]},
                     [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
                 #aside{class=["col-md-4"], body=[
-                    #feed_ui{title= <<"Active discussion">>, class="comments-flat", state=Discus}]}]}]}]}] ++ footer().
+                    #feed_ui{title= <<"Gossip">>, class="comments-flat", state=Discus}]}]}]}]}] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
@@ -127,12 +128,14 @@ header() ->
             #panel{class=["navbar-collapse", collapse], body=[
                 #list{class=[nav, "navbar-nav"], body=[
                     #li{body=#link{url= <<"/store">>, body= <<"Store">> }},
-                    #li{body=#link{url= <<"/reviews">>, body= <<"Reviews">> }}]},
+                    #li{body=#link{url= <<"/index">>, body= <<"Reviews">> }},
+                    #li{body=#link{url= <<"/chat">>, body= <<"Messages">> }}]},
 
                 #list{class=[nav, "navbar-nav", "navbar-right"], body=case User#user.email of undefined ->
                     #li{body=#link{url= <<"/login">>, body= <<"Sign In">> }};
                 _ -> [
                     #li{body=[#link{url= <<"/cart">>, body=[
+                        #span{id=onlinenumber},
                         #span{class=["fa-stack", "fa-lg"], body=[
                             #span{id=?USR_CART(User#user.id), class=["cart-number", "fa-stack-2x"], body= case CartFeed of
                                                 {error,_} -> <<"?">>;
@@ -196,6 +199,7 @@ api_event(Name,Tag,Term) -> error_logger:info_msg("Name ~p, Tag ~p, Term ~p",[Na
 
 event(init) -> wf:reg(?MAIN_CH), [];
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({add_cart, P}) ->
     store:event({add_cart, P}),
     wf:redirect("/cart");
@@ -224,7 +228,10 @@ render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=r
                           {ok, User} -> {E#entry.from, User#user.display_name,User#user.avatar};
                           {error, _} -> {E#entry.from,E#entry.from,""} end,
     wf:render([
-        #panel{class=["av-col"], body=case Avatar of [] -> []; _ -> #image{image=Avatar,width="100%",class=["img-thumbnail"]} end},
+        #panel{class=["av-col"],
+            body = case Avatar of
+                [] -> [];
+                _ -> #image{image=Avatar,width="100%",class=["img-thumbnail"]} end},
         #panel{class=["title-col"], body=[
             #panel{body= [
                 #span{body=#link{body=#b{body=From}, url= "/profile?id="++wf:to_list(FromId)}}, " ",

@@ -47,6 +47,7 @@ body() ->
     ]}]}] ++ index:footer() ++ avz:sdk(?LOGIN).
 
 event(init) -> wf:reg(?MAIN_CH), [];
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event(login) -> avz:login(email, [{<<"email">>, list_to_binary(wf:q(user))}, {<<"password">>, wf:q(pass)}]);
 event({login, #user{}=User}) ->

@@ -109,7 +109,7 @@ render_element(#div_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{
         {ok, #user{avatar=Av, display_name=Name}} -> {Name, ?URL_AVATAR(Av, "50")};
         _ -> {<<"John">>, ?URL_AVATAR(undefined, "50")} end,
 
-    Avatar = #image{class=["img-circle", "img-thumbnail"],width= <<"50px">>,height= <<"50px">>,image=Img},
+%    Avatar = #image{class=["img-circle", "img-thumbnail"],width= <<"50px">>,height= <<"50px">>,image=Img},
     Date = index:to_date(C#comment.created),
 
     InnerFeed = case lists:keyfind(comments,1,C#comment.feeds) of false -> [];
@@ -137,10 +137,10 @@ render_element(#div_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{
             #feed_ui{class="comments", state=CmState, header=Input} end,
 
         wf:render([#panel{class=[media, "media-comment"], body=[
-            #link{class=["pull-left"], body=[Avatar], url=?URL_PROFILE(C#comment.from)},
+%            #link{class=["pull-left"], body=[Avatar], url=?URL_PROFILE(C#comment.from)},
             #panel{class=["media-body"], body=[
                 #p{class=["media-heading"], body=[
-                    #link{body= Author, url=?URL_PROFILE(C#comment.from)}, <<",">>, Date ]},
+                    #link{body= Author, url=?URL_PROFILE(C#comment.from)}, " ", Date ]},
                 #p{body=C#comment.content},
 
                 if State#feed_state.flat_mode == true -> [];
@@ -154,6 +154,7 @@ render_element(E)-> feed_ui:render_element(E).
 
 event(init) -> wf:reg(?MAIN_CH), [];
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 api_event(_,_,_) -> ok.
 

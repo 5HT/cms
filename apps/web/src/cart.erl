@@ -185,7 +185,7 @@ event({checkout, Visible}) ->
                             {I, proplists:get_value("CORRELATIONID", Req1)})
             end || I <- Ids],
             wf:update(alert, index:alert_inline(wf:js_escape(wf:to_list(E))));_-> ok end;
-
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery([entry, {_,Fid}, _]=R, [#entry{}|_]=M)->

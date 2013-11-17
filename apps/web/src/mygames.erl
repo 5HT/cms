@@ -75,6 +75,7 @@ render_element(E)-> feed_ui:render_element(E).
 %% Events
 
 event(init) -> wf:reg(?MAIN_CH), [];
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event(_) -> ok.
 

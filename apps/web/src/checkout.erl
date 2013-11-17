@@ -117,6 +117,7 @@ event({buy, Params, Order}) ->
             wf:update(alert, cart:alert("tokens doesn't match")) end end;
 
 event({cancel, Token}) -> wf:redirect("/cart?token="++wf:to_list(Token));
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery(_R, _M) -> skip.
