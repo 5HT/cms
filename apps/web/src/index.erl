@@ -16,7 +16,7 @@ on_shown(Type) ->
     X = jq("a[data-toggle=\""+Type+"\"]"),
     X:on("shown.bs.tab", fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
 
-main() -> #dtl{file = "prod", ext="dtl", bindings=[ {title, <<"esprit">>},
+main() -> #dtl{file = "prod", ext="dtl", bindings=[ {title, <<"Countach">>},
                                                     {body, body()},
                                                     {css,?INDEX_CSS},{less,?LESS},{js,?INDEX_BOOTSTRAP}]}.
 body() ->
@@ -47,15 +47,16 @@ body() ->
             #section{class=[container, featured], body=#panel{id=carousel, class=[container], body=featured()}},
             #section{class=[container], body=[
                 #h3{body=[
-                    [ #link{url="#"++wf:to_list(F), body=[" ",N],data_fields=?DATA_TAB} || {N,F} <- Groups ],
+                    string:join([ [#link{url="#"++wf:to_list(F), body=N,data_fields=?DATA_TAB}] || {N,F} <- Groups ]," "),
                     " or ",
-                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB} ]},
+                    #link{url="#all",body= <<"Everything">>,data_fields=?DATA_TAB}, " ",
+                    #link{url="#mine",body= <<"Mine">>,data_fields=?DATA_TAB} ]},
                 #panel{class=["col-md-8", "tab-content"], body=[
                     #panel{id=all, class=["tab-pane", active], body=[
-                        #feed_ui{title= <<"Reviews">>, icon=[fa, "fa-tags "], state=All#feed_state{delegate=index}}]},
+                        #feed_ui{title= <<"">>, icon=[fa, "fa-tags "], state=All#feed_state{delegate=index}}]},
                     [#panel{id=wf:to_list(Fid), class=["tab-pane"]}|| {_,Fid} <- Groups]]},
                 #aside{class=["col-md-4"], body=[
-                    #feed_ui{title= <<"Active discussion">>, class="comments-flat", state=Discus}]}]}]}]}] ++ footer().
+                    #feed_ui{title= <<"Gossip">>, class="comments-flat", state=Discus}]}]}]}]}] ++ footer().
 
 feed(Fid) ->
    #feed_ui{icon=[fa, "fa-tags ", "fa-large "],
@@ -127,12 +128,15 @@ header() ->
             #panel{class=["navbar-collapse", collapse], body=[
                 #list{class=[nav, "navbar-nav"], body=[
                     #li{body=#link{url= <<"/store">>, body= <<"Store">> }},
-                    #li{body=#link{url= <<"/reviews">>, body= <<"Reviews">> }}]},
+                    #li{body=#link{url= <<"/index">>, body= <<"Reviews">> }},
+                    #li{body=#link{url= <<"/chat">>, body= <<"Messages">> }}]},
 
                 #list{class=[nav, "navbar-nav", "navbar-right"], body=case User#user.email of undefined ->
                     #li{body=#link{url= <<"/login">>, body= <<"Sign In">> }};
                 _ -> [
                     #li{body=[#link{url= <<"/cart">>, body=[
+                        #span{body="Online: "},
+                        #span{id=onlinenumber,body=" "},
                         #span{class=["fa-stack", "fa-lg"], body=[
                             #span{id=?USR_CART(User#user.id), class=["cart-number", "fa-stack-2x"], body= case CartFeed of
                                                 {error,_} -> <<"?">>;
@@ -196,6 +200,7 @@ api_event(Name,Tag,Term) -> error_logger:info_msg("Name ~p, Tag ~p, Term ~p",[Na
 
 event(init) -> wf:reg(?MAIN_CH), [];
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({add_cart, P}) ->
     store:event({add_cart, P}),
     wf:redirect("/cart");
@@ -218,31 +223,28 @@ shorten(Input) when is_binary(Input) ->
         re:replace(Subj, Pt, Re, [global, {return, binary}]) end, Input, R).
 
 render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State}) ->
-
     Id = element(State#feed_state.entry_id, E),
     UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
-    {FromId, From} = case kvs:get(user, E#entry.from) of 
-                          {ok, User} -> {E#entry.from, User#user.display_name};
-                          {error, _} -> {E#entry.from,E#entry.from} end,
-
-    wf:render([#panel{class=["col-sm-3", "article-meta"], body=[
-        #h3{class=[blue], body= <<"">>},
-        #p{class=[username], body= #link{body=From, url= "/profile?id="++wf:to_list(FromId)}},
-        #panel{body= index:to_date(E#entry.created)},
-        #p{body=[
-            #link{url=?URL_REVIEW(Eid),body=[#span{class=[?EN_CM_COUNT(UiId)],
-                body= integer_to_list(kvs_feed:comments_count(entry, Id))},
-                #i{class=[fa,"fa-comment-alt", "fa-2x"]} ]} ]}]},
-
-        #panel{class=["col-sm-5", "article-text"], body=[
-            #h3{body=#span{id=?EN_TITLE(UiId), class=[title], body=
-                #link{style="color:#9b9c9e;", body=E#entry.title, url=?URL_REVIEW(Eid)}}},
-
-            #p{id=?EN_DESC(UiId), body=index:shorten(E#entry.description)},
-            #panel{id=?EN_TOOL(UiId), class=[more], body=[
-                #link{body=[<<"read more">>], url=?URL_REVIEW(Eid)} ]}]}]).
+    {FromId, From,Avatar} = case kvs:get(user, E#entry.from) of 
+                          {ok, User} -> {E#entry.from, User#user.display_name,User#user.avatar};
+                          {error, _} -> {E#entry.from,E#entry.from,""} end,
+    wf:render([
+        #panel{class=["av-col"],
+            body = case Avatar of
+                [] -> [];
+                _ -> #image{image=Avatar,width="100%",class=["img-thumbnail"]} end},
+        #panel{class=["title-col"], body=[
+            #panel{body= [
+                #span{body=#link{body=#b{body=From}, url= "/profile?id="++wf:to_list(FromId)}}, " ",
+                #span{body=index:to_date(E#entry.created)} ]},
+            #h3{class=[title], body=[ 
+                #span{id=?EN_TITLE(UiId), body=#link{body=E#entry.title, url=?URL_REVIEW(Eid)}},
+                #span{class=[label,"label-info","msg-label"],body=[integer_to_list(kvs_feed:comments_count(entry, Id))]}
+                    ]},
+            #span{style="padding:3px;background-color:steelblue;color:white;",body="Erlang"} ]} ]).
 
 to_date(undefined) -> to_date(now());
 to_date(Date)->
   {{Y, M, D}, {H,Mi,_}} = calendar:now_to_datetime(Date),
-  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi]).
+%  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi]).
+  io_lib:format("~s ~p", [?MONTH(M), D]).

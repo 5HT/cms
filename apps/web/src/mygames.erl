@@ -10,8 +10,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main()-> #dtl{file="dev", bindings=[{title,<<"my games">>},
-                                     {body,body()},{css,?MYGAMES_CSS},{less,?LESS},{js,?MYGAMES_BOOTSTRAP}]}.
+main()-> #dtl{file="dev", bindings=[{body,body()},{css,?MYGAMES_CSS},{less,?LESS},{js,?MYGAMES_BOOTSTRAP}]}.
 
 navbar() -> profile:navbar().
 
@@ -75,6 +74,7 @@ render_element(E)-> feed_ui:render_element(E).
 %% Events
 
 event(init) -> wf:reg(?MAIN_CH), [];
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event(_) -> ok.
 

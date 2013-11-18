@@ -12,7 +12,7 @@
 -include("states.hrl").
 
 main()-> #dtl{file="prod",
-              bindings=[{title,<<"admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
+              bindings=[{title,<<"Admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
 
 body() ->
     User = case wf:user() of undefined -> #user{}; U -> U end,
@@ -249,7 +249,7 @@ event({show_payment, prd, Id}) ->
           #td{body=#link{body=User, url= ?URL_PROFILE(User)}}]}
       end || #payment{user_id=User, product=#product{price=Price}} = Py
         <- kvs:all_by_index(payment, product_id, Id) ]]} );
-
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery(R,M) ->

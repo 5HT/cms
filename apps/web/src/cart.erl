@@ -11,8 +11,11 @@
 -include("states.hrl").
 -include("paypal.hrl").
 
-main() -> #dtl{file="prod", bindings=[{title,<<"shopping cart">>},
-                                      {body, body()},{css,?CART_CSS},{less,?LESS},{js, ?CART_BOOTSTRAP}]}.
+main() ->
+    #dtl{file="prod",
+         bindings=[
+            {title,<<"Cart">>},{body, body()},
+            {css,?CART_CSS},{less,?LESS},{js, ?CART_BOOTSTRAP}]}.
 
 body()->
     case wf:user() of undefined -> wf:redirect("/login");
@@ -185,7 +188,7 @@ event({checkout, Visible}) ->
                             {I, proplists:get_value("CORRELATIONID", Req1)})
             end || I <- Ids],
             wf:update(alert, index:alert_inline(wf:js_escape(wf:to_list(E))));_-> ok end;
-
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery([entry, {_,Fid}, _]=R, [#entry{}|_]=M)->

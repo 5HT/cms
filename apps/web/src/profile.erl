@@ -262,6 +262,7 @@ event({request, Feature}) ->
             wf:update(?PAGE_ALERT({?CTX#context.module, User#user.email}),
                 index:alert(wf:to_list(Feature) ++" requested", "alert-info"))
     end end;
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(Event) ->
     User = case wf:user() of undefined -> #user{}; U -> U end,
     IsAdmin = kvs_acl:check_access(User#user.email, {feature, admin})==allow,

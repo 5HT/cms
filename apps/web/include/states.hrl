@@ -145,6 +145,14 @@
                                                       html_tag=table,
                                                       enable_traverse=true}).
 
+-define(ROOMS_FEED, ?FD_STATE(?FEED(user))#feed_state{view=conversations, 
+                                                      entry_type=user,
+                                                      entry_id=#user.id,
+                                                      delegate=chat}).
+-define(HISTORY_FEED(Id), ?FD_STATE(Id)#feed_state{ view=history,
+                                                    delegate = chat}).
+
+
 -define(PRODUCTS_VIEW_FEED, ?FD_STATE(?FEED(product))#feed_state{delegate=admin,
                                                                  entry_type=product,
                                                                  enable_selection=true,

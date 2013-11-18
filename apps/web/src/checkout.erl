@@ -10,7 +10,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main()-> #dtl{file="prod", bindings=[{title,<<"Confirm Order">>},
+main()-> #dtl{file="prod", bindings=[{title,<<"Checkout">>},
                                      {body, body()},{css,?CHECKOUT_CSS},{less,?LESS},{js,?CHECKOUT_BOOTSTRAP}]}.
 
 body() ->
@@ -117,6 +117,7 @@ event({buy, Params, Order}) ->
             wf:update(alert, cart:alert("tokens doesn't match")) end end;
 
 event({cancel, Token}) -> wf:redirect("/cart?token="++wf:to_list(Token));
+event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(_) -> ok.
 
 process_delivery(_R, _M) -> skip.
