@@ -58,14 +58,12 @@ render_element(#div_entry{entry=#entry{from=From,to=To,
     created=Date,description=Dsc,title=Title}=E, state=State})->
     wf:render([ message(From,Dsc,Date) ]);
 render_element(E)-> wf:info("Unknown: ~p",[E]).
-%message(_,"",_) -> [];
-%message(_,<<>>,_) -> [];
 message(Who,What,When) ->
     #panel{body=[
         #span{body= [
             #span{body=#link{body=Who}}, " ",
             #span{body=index:to_date(When)} ]},
-        #panel{class=[message],body=What} ]}.
+        #panel{class=[message],body=case What of <<>> -> "[ empty ]"; A -> A end} ]}.
 
 % page events
 
