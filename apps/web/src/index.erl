@@ -246,4 +246,5 @@ render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=r
 to_date(undefined) -> to_date(now());
 to_date(Date)->
   {{Y, M, D}, {H,Mi,_}} = calendar:now_to_datetime(Date),
-  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi]).
+%  io_lib:format("~s ~p, ~p at ~p:~p", [?MONTH(M), D, Y, H,Mi]).
+  io_lib:format("~s ~p", [?MONTH(M), D]).

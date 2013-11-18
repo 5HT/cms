@@ -1,106 +1,101 @@
 -module(chat).
 -compile(export_all).
+-compile({parse_transform, shen}).
 -include_lib("n2o/include/wf.hrl").
 -include_lib("kvs/include/users.hrl").
+-include_lib("kvs/include/feeds.hrl").
 -include("records.hrl").
+-include("states.hrl").
 
 main() -> 
   [ #dtl{file = wf:cache(mode), ext="dtl",
          bindings=[{title,<<"Chat">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]} ].
 
-items() ->
-    Link1 = {[{name, "Amazon"}, {url, "http://amazon.com"}]},
-    Link2 = {[{name, "Google"}, {url, "http://google.com"}]},
-    Link3 = {[{name, "Microsoft"}, {url, "http://microsoft.com"}]},
-    RenderVars = {items, [Link1, Link2, Link3]}.
-
-message(Who,What) ->
-    error_logger:info_msg("~p",[What]),
-  #panel{class=["media"],body=[
-      #link{class=["pull-left"], body=[
-          #image{class=["media-object"],image="static/img/infinity.png",width= <<"63">>} ]},
-            #panel{class=["media-body"],body=[
-                #h4{body= unicode:characters_to_binary(Who)},
-                #span{body=wf:js_escape(What)} ]} ]}.
-
 body() ->
-%    wf:wire(#wire{actions=#jq{target="ok",method=[method],trigger="self",type="type"}}),
-    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
-    {ok,Pid2} = wf:async("looper",fun() -> loop(0) end),
-    error_logger:info_msg("comet: ~p", [Pid2]),
-    index:header() ++ [
-  #panel{class=["container-fluid", chat], body=[
-    #panel{class=["row-fluid"], body=[
-      #h1{body= <<"N2O based WebSocket Chat">>,class=[offset3, span8]}
-    ]},
-    #panel{class=["row-fluid"], body=[
-      #panel{class=[span3], body=[
-        #h4{body= <<"Your Chats:">>},
-        #list{class=[unstyled, "chat-rooms"], body=[
-          #li{body=#link{body= <<"doxtop">>}},
-          #li{body=#link{body= <<"maxim">>}},
-          #li{body=#link{body= <<"Lobby Conference">>}} ]} ]},
-      #panel{class=[span8], body=[
-        #panel{id=history, class=[history], body=[
-            case wf:user() of undefined -> message("System","You are not logged in. Anonymous mode!");
-                              User -> message("System", "Hello, "++ 
-        case User#user.display_name of <<N/binary>> -> binary_to_list(N); 
-             undefined -> "Anonymous";
-              L -> L end
-     ++ "! Here you can chat, please go on!") end ]},
-        #textarea{id=message,style="display: inline-block; width: 200px; margin-top: 20px; margin-right: 20px;"},
-        #button{id=send,body="Send",class=["btn","btn-primary","btn-large","btn-inverse"],postback={chat,Pid},source=[message]}
-      ]}
-    ]}
-  ]},
 
-    #span   { id=counter,body="0" },
-    #button { id=increment, body="Send", postback={inc,Pid2} }
+    {ok,Pid} = wf:async("main",fun() -> chat_loop() end),
 
-  ] ++ index:footer().
+    Feeds = [{"inbox","Inbox"},{"archive","Archive"},{"system","System"}],
+    UsersFeed = ?FEED(user),
+    Conversations = ?ROOMS_FEED,
+    History =  case lists:keyfind(sent, 1, element(#iterator.feeds, wf:user())) of
+        false -> index:error("No feed"), [];
+        {A, Id} -> wf:info("Id ~p",[{A,Id}]),?HISTORY_FEED(Id) end,
 
+    #panel{class=[page], body=[
+        index:header(),
+        #panel{class=["page-wrapper"],body=[
+            #section{class=[container], body=[
+                #h3{body=[string:join([ [#link{url="#"++F, body=N}] || {F,N} <- Feeds ]," ") ]},
+                #panel{class=["col-md-4", "tab-content"], body=[ 
+                    #panel{id=inbox,class=["tab-pane",active], body=#feed_ui{state=Conversations}} ]},
+                #panel{id=history,class=["col-md-8",history], body=[
+                    #feed_ui{state=History},
+                    #htmlbox{id=message,style="width: 100%;"},
+                    #button{id=send,body="Send",postback={chat,Pid},source=[message]} ]} ]} ]} ]}.
 
-event({inc,Pid}) -> wf:info("Inc"), Pid ! inc;
+% render roster
+
+render_element(#div_entry{entry=#user{avatar=Avatar,
+    id=From,register_date=Date}, state=State})->
+    wf:render([
+        #panel{class=["av-col"],
+            body = case Avatar of
+                [] -> [];
+                _ -> #image{image=Avatar,width="100%",class=["img-thumbnail"]} end},
+        #panel{class=["title-col"], body=[
+            #span{body= [
+                #span{body=#link{body=From}}, " ",
+                #span{body=index:to_date(Date)} ]},
+            #h3{class=[title], body=[ 
+                #span{body=#link{style="font-size:18pt;",body=#b{body=From}}},
+                #span{class=[label,"label-info","msg-label"],body=[]} ]} ]}
+    ]);
+
+% render messages
+
+render_element(#div_entry{entry=#entry{from=From,to=To,
+    created=Date,description=Dsc,title=Title}=E, state=State})->
+    wf:render([ message(From,Dsc,Date) ]);
+render_element(E)-> wf:info("Unknown: ~p",[E]).
+message(Who,What,When) ->
+    #panel{body=[
+        #span{body= [
+            #span{body=#link{body=Who}}, " ",
+            #span{body=index:to_date(When)} ]},
+        #panel{style="font-size: 20px;background-color:#fafafa;",body=What} ]}.
+
+% page events
 
 event(init) ->
     Self = self(),
     wf:reg(room),
-    wf:reg(room2),
     wf:send(lobby,{top,5,Self}),
-    Terms = wf:render(receive Top -> [ message(U,M) || {U,M} <- Top] end),
-    error_logger:info_msg("Top 10: ~p",[Terms]),
-    wf:insert_top(<<"history">>, Terms),
+    Terms = wf:render(receive Top -> [ message(U,M,now()) || {U,M} <- Top] end),
+    wf:insert_top(<<"history">>, wf_convert:js_escape(Terms)),
     wf:wire("$('#history').scrollTop = $('#history').scrollHeight;");
+event({inc,Pid}) -> wf:info("Inc"), Pid ! inc;
 event(chat) -> wf:redirect("chat");
 event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(hello) -> wf:redirect("login");
 event(<<"PING">>) -> ok;
-
 event({chat,Pid}) ->
     wf:wire(#jq{target=n2ostatus,method=[show,select],args=[]}),
-    error_logger:info_msg("Chat Pid: ~p",[Pid]),
     Username = case wf:user() of undefined -> "anonymous"; A -> A#user.display_name end,
     Message = wf:q(message),
-    Terms = [ message("Systen","Message added"), #button{postback=hello} ],
-%    wf:update(history, [#span{body="hello"},#br{}]),
+    Terms = [ message("Systen","Message added",now()), #button{postback=hello} ],
     wf:wire("$('#message').focus(); $('#message').select(); "),
+    wf:send(lobby,{add,{Username,Message}}),
     Pid ! {message, Username, Message}.
 
-    loop(Counter) ->
-        wf:info("loop ok"),
-        receive inc -> wf:info("F"),wf:update(counter, #span { body=wf:to_list(Counter) }), wf:flush(room2);
-                U -> wf:info("U:~p",[U]) end, loop(Counter+1).
+% async subscription to global room
 
 chat_loop() ->
     receive
         {message, Username, Message} ->
-            error_logger:info_msg("Comet received : ~p",[{Username,Message}]),
-            Terms = message(Username,Message),
-            wf:insert_top(<<"history">>, Terms),
+            Terms = message(Username,Message,now()),
+            wf:insert_top(<<"history">>, wf_convert:js_escape(wf:render(Terms))),
             wf:wire(#jq{target=history,property=scrollTop,right=#jq{target=history,property=scrollHeight}}),
-%            wf:wire("$('#history').scrollTop = $('#history').scrollHeight;"),
-            wf:send(lobby,{add,{Username,Message}}),
             wf:flush(room);
         Unknown -> error_logger:info_msg("Unknown Looper Message ~p in Pid: ~p",[Unknown,self()])
     end, chat_loop().
-

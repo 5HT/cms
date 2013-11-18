@@ -11,8 +11,11 @@
 -include("states.hrl").
 -include("paypal.hrl").
 
-main() -> #dtl{file="prod", bindings=[{title,<<"Cart">>},
-                                      {body, body()},{css,?CART_CSS},{less,?LESS},{js, ?CART_BOOTSTRAP}]}.
+main() ->
+    #dtl{file="prod",
+         bindings=[
+            {title,<<"Cart">>},{body, body()},
+            {css,?CART_CSS},{less,?LESS},{js, ?CART_BOOTSTRAP}]}.
 
 body()->
     case wf:user() of undefined -> wf:redirect("/login");
