@@ -7,19 +7,19 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main() -> 
-  [ #dtl{file = wf:cache(mode), ext="dtl",
-         bindings=[{title,<<"Chat">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]} ].
+main() ->
+    #dtl{file = wf:cache(mode), ext="dtl",
+         bindings=[{title,<<"Chat">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]}.
 
 body() ->
-
     {ok,Pid} = wf:async("main",fun() -> chat_loop() end),
 
     Feeds = [{"inbox","Inbox"},{"archive","Archive"},{"system","System"}],
     UsersFeed = ?FEED(user),
     Conversations = ?ROOMS_FEED,
-    History =  case lists:keyfind(sent, 1, element(#iterator.feeds, wf:user())) of
-        false -> index:error("No feed"), [];
+    User = case wf:user() of undefined -> #user{}; X -> X end,
+    History =  case lists:keyfind(sent, 1, element(#iterator.feeds, User)) of
+        false -> #feed_state{};
         {A, Id} -> wf:info("Id ~p",[{A,Id}]),?HISTORY_FEED(Id) end,
 
     #panel{class=[page], body=[
@@ -31,7 +31,7 @@ body() ->
                     #panel{id=inbox,class=["tab-pane",active], body=#feed_ui{state=Conversations}} ]},
                 #panel{id=history,class=["col-md-8",history], body=[
                     #feed_ui{state=History},
-                    #htmlbox{id=message,style="width: 100%;"},
+                    #htmlbox{id=message,class=["form-control"],style="width:100%;font-size:14pt;"},
                     #button{id=send,body="Send",postback={chat,Pid},source=[message]} ]} ]} ]} ]}.
 
 % render roster
@@ -58,12 +58,14 @@ render_element(#div_entry{entry=#entry{from=From,to=To,
     created=Date,description=Dsc,title=Title}=E, state=State})->
     wf:render([ message(From,Dsc,Date) ]);
 render_element(E)-> wf:info("Unknown: ~p",[E]).
+%message(_,"",_) -> [];
+%message(_,<<>>,_) -> [];
 message(Who,What,When) ->
     #panel{body=[
         #span{body= [
             #span{body=#link{body=Who}}, " ",
             #span{body=index:to_date(When)} ]},
-        #panel{style="font-size: 20px;background-color:#fafafa;",body=What} ]}.
+        #panel{class=[message],body=What} ]}.
 
 % page events
 
@@ -80,7 +82,6 @@ event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(hello) -> wf:redirect("login");
 event(<<"PING">>) -> ok;
 event({chat,Pid}) ->
-    wf:wire(#jq{target=n2ostatus,method=[show,select],args=[]}),
     Username = case wf:user() of undefined -> "anonymous"; A -> A#user.display_name end,
     Message = wf:q(message),
     Terms = [ message("Systen","Message added",now()), #button{postback=hello} ],

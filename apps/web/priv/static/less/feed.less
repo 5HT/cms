@@ -1,3 +1,5 @@
+
+
 .dashboard-feed {
     & .fd-ui{
         padding-left:30px;
@@ -5,13 +7,18 @@
     }
 }
 
+.message { font-size: 20px;background-color:#fafafa; padding: 5px;}
 .history { 
-    .fd-ui {
+    & .nav { display: none; }
+    & .form-control { margin-top: 10px; }
+    & .fd-ui {
+        margin-top: 0px;
+        margin-bottom: 0px;
         .fd-body {
             .fd-entry {
                 margin-bottom: 0px;
                 padding: 0px;
-                & .fd-entry-container { margin: 0px; padding: 0px;
+                & .fd-entry-container { margin: 0px; padding: 0px; width: 100%;
                     & h4 { margin: 0px; padding: 0px; }
                 }
             }
@@ -20,6 +27,8 @@
 }
 
 .fd-ui {
+    margin-top: 0px;
+    margin-bottom: 0px;
     &.comments-flat{
         background: #fff;
         .box-shadow(0 2px 3px 1px rgba(0,0,0,.1));

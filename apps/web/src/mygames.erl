@@ -10,7 +10,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main()-> #dtl{file="dev", bindings=[{body,body()},{css,?MYGAMES_CSS},{less,?LESS},{js,?MYGAMES_BOOTSTRAP}]}.
+main()-> #dtl{file="prod", bindings=[{body,body()},{css,?MYGAMES_CSS},{less,?LESS},{js,?MYGAMES_BOOTSTRAP}]}.
 
 navbar() -> profile:navbar().
 

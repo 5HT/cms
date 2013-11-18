@@ -150,6 +150,7 @@
                                                       entry_id=#user.id,
                                                       delegate=chat}).
 -define(HISTORY_FEED(Id), ?FD_STATE(Id)#feed_state{ view=history,
+                                                    show_title=false,
                                                     delegate = chat}).
 
 
