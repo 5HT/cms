@@ -147,6 +147,7 @@
 
 -define(ROOMS_FEED, ?FD_STATE(?FEED(user))#feed_state{view=conversations, 
                                                       entry_type=user,
+                                                      show_title=false,
                                                       entry_id=#user.id,
                                                       delegate=chat}).
 -define(HISTORY_FEED(Id), ?FD_STATE(Id)#feed_state{ view=history,

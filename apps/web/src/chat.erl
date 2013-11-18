@@ -7,9 +7,13 @@
 -include("records.hrl").
 -include("states.hrl").
 
+% template
+
 main() ->
     #dtl{file = wf:cache(mode), ext="dtl",
          bindings=[{title,<<"Chat">>},{body,body()},{css,?CSS},{js,?DEFJS},{less,?LESS}]}.
+
+% page body
 
 body() ->
     {ok,Pid} = wf:async("main",fun() -> chat_loop() end),
@@ -27,7 +31,8 @@ body() ->
         #panel{class=["page-wrapper"],body=[
             #section{class=[container], body=[
                 #h3{body=[string:join([ [#link{url="#"++F, body=N}] || {F,N} <- Feeds ]," ") ]},
-                #panel{class=["col-md-4", "tab-content"], body=[ 
+                #panel{class=["col-md-4", "tab-content",roster], body=[ 
+                    #br{},
                     #panel{id=inbox,class=["tab-pane",active], body=#feed_ui{state=Conversations}} ]},
                 #panel{id=history,class=["col-md-8",history], body=[
                     #feed_ui{state=History},
