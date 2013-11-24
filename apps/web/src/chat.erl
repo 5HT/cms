@@ -47,7 +47,7 @@ render_element(#div_entry{entry=#user{avatar=Avatar,
         #panel{class=["av-col"],
             body = case Avatar of
                 [] -> [];
-                _ -> #image{image=Avatar,width="100%",class=["img-thumbnail"]} end},
+                _ -> #image{image=Avatar,width="100%",height="100%",class=["img-thumbnail"]} end},
         #panel{class=["title-col"], body=[
             #span{body= [
                 #span{body=#link{body=From}}, " ",
