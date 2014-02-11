@@ -34,6 +34,12 @@ Then in Erlang console you should init the DB.
 > kvs:initialize().
 > kvs:init_db().
 
+Login using Google+ account (only G+ allow to login using localhost).
+
+> admin:grant("yourname@gmail.com").
+
+You are ready to go.
+
 Node Tools for Designers
 ------------------------
 
