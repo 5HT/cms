@@ -68,7 +68,7 @@ body() ->
 
 % Render view 
 
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=detached}=State})->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=detached}=State})->
     Eid = element(State#feed_state.entry_id, E),
 
     Entry = #panel{class=["blog-post"], body=[
@@ -103,7 +103,7 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=detached}=Sta
 
 % Comment
 
-render_element(#div_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{}=State})->
+render_element(#feed_entry{entry=#comment{entry_id={Eid,_}}=C, state=#feed_state{}=State})->
     Id = element(State#feed_state.entry_id, C),
     {Author, Img} = case kvs:get(user, C#comment.from) of
         {ok, #user{avatar=Av, display_name=Name}} -> {Name, ?URL_AVATAR(Av, "50")};

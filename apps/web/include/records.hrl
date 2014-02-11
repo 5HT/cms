@@ -1,4 +1,4 @@
--include_lib("feed_server/include/records.hrl").
+-include_lib("feeds/include/records.hrl").
 
 -define(ROOT, code:priv_dir(web)).
 -define(DEFJS, "/static/js/countach.min.js").

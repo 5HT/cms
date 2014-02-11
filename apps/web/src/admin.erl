@@ -11,6 +11,8 @@
 -include("records.hrl").
 -include("states.hrl").
 
+grant(Name) -> kvs_acl:define_access({user, Name}, {feature, admin}, allow).
+
 main()-> #dtl{file="prod",
               bindings=[{title,<<"Admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
 
@@ -136,34 +138,34 @@ tab(_)-> [].
 
 % Render 
 
-render_element(#row_entry{entry=#group{name=Name, description=Desc, scope=Scope}=E, state=#feed_state{}=S}) ->
+render_element(#feed_entry{entry=#group{name=Name, description=Desc, scope=Scope}=E, state=#feed_state{}=S}) ->
     wf:render([
         #td{body=wf:to_list(element(S#feed_state.entry_id, E))},
         #td{body=Name},
         #td{body=Desc},
         #td{body=atom_to_list(Scope)}]);
 
-render_element(#row_entry{entry=#user{email=Email}=U}) -> wf:render([
+render_element(#feed_entry{entry=#user{email=Email}=U}) -> wf:render([
     #td{body=#link{url=?URL_PROFILE(Email), body=Email}},
     #td{body=[profile:features(wf:user(), U, "fa fa-2x")]},
     #td{body=case kvs:get(user_status, Email) of 
         {ok,Status} -> feed_ui:to_date(Status#user_status.last_login); {error,_}-> "" end}]);
 
-render_element(#row_entry{entry=#product{title=Title, brief=Description}}) -> wf:render([
+render_element(#feed_entry{entry=#product{title=Title, brief=Description}}) -> wf:render([
     #td{body=Title},
     #td{body=Description}]);
 
-render_element(#row_entry{entry=#entry{title=Title, description=Description,from=From}}) -> wf:render([
+render_element(#feed_entry{entry=#entry{title=Title, description=Description,from=From}}) -> wf:render([
     #td{body=From},
     #td{style="word-break:break-all;", body=Title},
     #td{body=Description}]);
 
-render_element(#row_entry{entry=#acl_entry{accessor={user, Accessor}, action=Action}=E, state=S})-> wf:render([
+render_element(#feed_entry{entry=#acl_entry{accessor={user, Accessor}, action=Action}=E, state=S})-> wf:render([
     #td{body= wf:to_list(element(S#feed_state.entry_id, E))},
     #td{body= Accessor},
     #td{body= atom_to_list(Action)}]);
 
-render_element(#row_entry{entry=#payment{id=Id, product_id=Pid}=Py}) -> wf:render([
+render_element(#feed_entry{entry=#payment{id=Id, product_id=Pid}=Py}) -> wf:render([
     #td{body= #small{body=Id}},
     #td{body= #small{body=Py#payment.external_id}},
     #td{body= [#link{url=?URL_PRODUCT(Pid), body= Py#payment.product#product.title }]},

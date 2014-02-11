@@ -55,12 +55,12 @@ body()->
         ]}]}] ++ index:footer().
 
 %% Render store elements
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=store}=State}) ->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=store}=State}) ->
     case kvs:get(product, E#entry.entry_id) of
         {error, _} -> wf:render(#panel{body= <<"error displaying item">>});
         {ok, P} -> store_element(wf:to_list(erlang:phash2(element(State#feed_state.entry_id, P))), P) end;
 
-render_element(#div_entry{entry=#product{}=P, state=#feed_state{view=store}}) ->
+render_element(#feed_entry{entry=#product{}=P, state=#feed_state{view=store}}) ->
     store_element(wf:to_list(erlang:phash2(element(#product.id, P))), P);
 
 render_element(#entry_media{media=[#media{}=Media|_]}) ->

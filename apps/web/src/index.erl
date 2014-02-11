@@ -222,7 +222,7 @@ shorten(Input) when is_binary(Input) ->
     lists:foldl(fun({Pt, Re}, Subj) ->
         re:replace(Subj, Pt, Re, [global, {return, binary}]) end, Input, R).
 
-render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State}) ->
+render_element(#feed_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State}) ->
     Id = element(State#feed_state.entry_id, E),
     UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
     {FromId, From,Avatar} = case kvs:get(user, E#entry.from) of 

@@ -33,7 +33,7 @@ body()->
 
 %% Render review elements
 
-render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State})->
+render_element(#feed_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State})->
     Id = element(State#feed_state.entry_id, E),
     Fid = State#feed_state.container_id,
     UiId = wf:to_list(erlang:phash2(Id)),

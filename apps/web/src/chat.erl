@@ -41,7 +41,7 @@ body() ->
 
 % render roster
 
-render_element(#div_entry{entry=#user{avatar=Avatar,
+render_element(#feed_entry{entry=#user{avatar=Avatar,
     id=From,register_date=Date}, state=State})->
     wf:render([
         #panel{class=["av-col"],
@@ -59,7 +59,7 @@ render_element(#div_entry{entry=#user{avatar=Avatar,
 
 % render messages
 
-render_element(#div_entry{entry=#entry{from=From,to=To,
+render_element(#feed_entry{entry=#entry{from=From,to=To,
     created=Date,description=Dsc,title=Title}=E, state=State})->
     wf:render([ message(From,Dsc,Date) ]);
 render_element(E)-> wf:info("Unknown: ~p",[E]).

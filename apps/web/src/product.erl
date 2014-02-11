@@ -197,7 +197,7 @@ render_element(#product_hero{product=P}) ->
   ]},
   element_panel:render_element(Hero);
 
-render_element(#div_entry{entry=E, state=#feed_state{view=files}=S})->
+render_element(#feed_entry{entry=E, state=#feed_state{view=files}=S})->
     Uid = wf:to_list(erlang:phash2(element(S#feed_state.entry_id, E))),
     Panel =#panel{class=["file-entry"],body=[
         #p{id=?EN_DESC(Uid), body=E#entry.description},
@@ -205,7 +205,7 @@ render_element(#div_entry{entry=E, state=#feed_state{view=files}=S})->
     ]},
     element_panel:render_element(Panel);
 
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=group, flat_mode=true}=State}) ->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=group, flat_mode=true}=State}) ->
     case kvs:get(product, E#entry.entry_id) of {error, _} -> wf:render(#panel{body= <<"error displaying item">>});
     {ok, P} ->
         Id = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, P))),
@@ -230,7 +230,7 @@ render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=group, flat_m
 
 % Render blog view
 
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=blog}=State})->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=blog}=State})->
     {Eid,_} = Id = element(State#feed_state.entry_id, E),
     UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
     From = case kvs:get(user, E#entry.from) of {ok, User} -> User#user.display_name; {error,_} -> E#entry.from end,

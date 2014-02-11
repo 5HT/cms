@@ -1,6 +1,6 @@
 RELEASE := countach
 COOKIE  := node_runner
-APPS    := web amqp_client avz cowboy erlydtl gproc kai kvs xmerl lager mimetypes mqs n2o n2o_bootstrap oauth rabbit_common ranch active feed_server
+APPS    := web amqp_client avz cowboy erlydtl gproc kai kvs xmerl lager mimetypes mqs n2o n2o_bootstrap oauth rabbit_common ranch active feeds
 VER     := 1.0.0
 VM      := rels/web/files/vm.args
 SYS     := rels/web/files/sys.config
@@ -27,7 +27,7 @@ static-link:
 	ln -sf ../../n2o_scripts $(N2O)
 	mkdir -p $(shell dirname $(FILES))
 	ln -sf ../../../../deps/n2o_bootstrap/priv/static $(N2O_BT)
-	ln -sf ../../../../deps/feed_server/priv/static $(FD_UI)
+	ln -sf ../../../../deps/feeds/priv/static $(FD_UI)
 	ln -sf ../../../../deps/n2o/priv/static/n2o $(FILES)
 	ln -sf ../../../../deps/bootstrap $(BOOTSTRAP)
 	ln -sf ../../../../deps/font-awesome $(FONTAWESOME)

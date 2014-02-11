@@ -110,7 +110,7 @@ order_summary(undefined,_)->[].
 
 %% Render elements
 
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=cart}=State}) ->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=cart}=State}) ->
     wf:render(case kvs:get(product, E#entry.entry_id) of
     {ok, P} ->
         Id = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),

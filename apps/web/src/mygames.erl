@@ -34,7 +34,7 @@ body()->
 
 %% Render feed items
 
-render_element(#div_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=product}=State}) ->
+render_element(#feed_entry{entry=#entry{id={Eid,_}}=E, state=#feed_state{view=product}=State}) ->
     Id = element(State#feed_state.entry_id, E),
     case kvs:get(product, Eid) of {error,_}-> wf:render(["no product"]);
     {ok, P} ->

@@ -48,7 +48,7 @@ body()->
 
 %% Render review elements
 
-render_element(#div_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State})->
+render_element(#feed_entry{entry=#entry{entry_id=Eid}=E, state=#feed_state{view=review}=State})->
     Id = element(State#feed_state.entry_id, E),
     UiId = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
     {FromId, From} = case kvs:get(user, E#entry.from) of 

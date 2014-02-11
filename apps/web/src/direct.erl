@@ -56,7 +56,7 @@ icon(_)-> "".
 
 % Render direct messages
 
-render_element(#div_entry{entry=#entry{}=E, state=#feed_state{view=direct}=State})->
+render_element(#feed_entry{entry=#entry{}=E, state=#feed_state{view=direct}=State})->
     Id = wf:to_list(erlang:phash2(element(State#feed_state.entry_id, E))),
     User = wf:user(),
     From = case kvs:get(user, E#entry.from) of {ok, U} -> U#user.display_name; {error, _} -> E#entry.from end,
