@@ -11,7 +11,11 @@
 -include("records.hrl").
 -include("states.hrl").
 
-grant(Name) -> kvs_acl:define_access({user, Name}, {feature, admin}, allow).
+grant(Name) ->
+    kvs_acl:define_access({user, Name}, {feature, admin}, allow),
+    kvs_acl:define_access({user, Name}, {feature, developer}, allow),
+    kvs_acl:define_access({user, Name}, {feature, reviewer}, allow),
+    ok.
 
 main()-> #dtl{file="prod",
               bindings=[{title,<<"Admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
