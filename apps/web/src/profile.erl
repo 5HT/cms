@@ -11,7 +11,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-main() -> [#dtl{file = "prod",  ext="dtl", bindings=[
+main() -> [#dtl{file = "dev",  ext="dtl", bindings=[
     {title,<<"Profile">>},{body,body()},{css,?PROFILE_CSS},{less,?LESS},{js, ?PROFILE_BOOTSTRAP}]}].
 
 navbar() ->

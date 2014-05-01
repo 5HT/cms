@@ -85,7 +85,7 @@ render_element(E)->feed_ui:render_element(E).
 control_event(_, _) -> ok.
 api_event(tabshow,Args,_) ->
     [Id|_] = string:tokens(Args,"\"#"),
-    wf:info("Show tab ~p", [Id]),
+    wf:info(?MODULE,"Show tab ~p", [Id]),
     case list_to_atom(Id) of direct -> ok;
     _-> wf:update(list_to_atom(Id), feed(list_to_atom(Id), true)) end;
 api_event(_,_,_) -> ok.

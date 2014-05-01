@@ -25,7 +25,7 @@ body() ->
     User = case wf:user() of undefined -> #user{}; X -> X end,
     History =  case lists:keyfind(sent, 1, element(#iterator.feeds, User)) of
         false -> #feed_state{};
-        {A, Id} -> wf:info("Id ~p",[{A,Id}]),?HISTORY_FEED(Id) end,
+        {A, Id} -> wf:info(?MODULE,"Id ~p",[{A,Id}]),?HISTORY_FEED(Id) end,
 
     #panel{class=[page], body=[
         index:header(),
@@ -63,7 +63,7 @@ render_element(#feed_entry{entry=#user{avatar=Avatar,
 render_element(#feed_entry{entry=#entry{from=From,to=To,
     created=Date,description=Dsc,title=Title}=E, state=State})->
     wf:render([ message(From,Dsc,Date) ]);
-render_element(E)-> wf:info("Unknown: ~p",[E]).
+render_element(E)-> wf:info(?MODULE,"Unknown: ~p",[E]).
 message(Who,What,When) ->
     #panel{body=[
         #span{body= [
@@ -80,7 +80,7 @@ event(init) ->
     Terms = wf:render(receive Top -> [ message(U,M,now()) || {U,M} <- Top] end),
     wf:insert_top(<<"history">>, wf_convert:js_escape(Terms)),
     wf:wire("$('#history').scrollTop = $('#history').scrollHeight;");
-event({inc,Pid}) -> wf:info("Inc"), Pid ! inc;
+event({inc,Pid}) -> wf:info(?MODULE,"Inc"), Pid ! inc;
 event(chat) -> wf:redirect("chat");
 event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event(hello) -> wf:redirect("login");

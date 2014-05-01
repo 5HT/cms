@@ -30,23 +30,23 @@ nvp_request(Method, Params) ->
     Body = string:join([string:join([wf:to_list(K),wf:to_list(V)],"=")|| {K,V}<-ExtendedParams],"&"),
 
     case httpc:request(post,{?PP_NVP, [], "x-www-form-urlencode", Body},[],[]) of
-    {error, E} -> wf:info("[paypal] Error ~p", [E]), {error, E};
+    {error, E} -> wf:info(?MODULE,"[paypal] Error ~p", [E]), {error, E};
     {ok, {StatusLine, _, ResponseBody}} ->
         case StatusLine of {"HTTP/1.1",200,"OK"} ->
             Details = [begin [K,V]=string:tokens(P,"="),{K,V} end||P<-string:tokens(http_uri:decode(ResponseBody),"&")],
 
             case proplists:get_value("ACK", Details) of "Success" -> Details;
             _ ->
-                wf:info("[paypal] ~p ACK failed ~p", [Method, Details]),
+                wf:info(?MODULE,"[paypal] ~p ACK failed ~p", [Method, Details]),
                 {error, Details} end;
        _ ->
-            wf:info("[paypal] ~p Request error. Status: ~p [~p]", [Method, StatusLine, ResponseBody]),
+            wf:info(?MODULE,"[paypal] ~p Request error. Status: ~p [~p]", [Method, StatusLine, ResponseBody]),
            {error, StatusLine} end;
     {ok, {StatusCode,_}} ->
-        wf:info("[paypal] ~p Request error. Status code: ~p", [Method, StatusCode]),
+        wf:info(?MODULE,"[paypal] ~p Request error. Status code: ~p", [Method, StatusCode]),
         {error, StatusCode};
     {ok, ReqId} ->
-        wf:info("[paypal] ~p Request error ~p", [Method, ReqId]),
+        wf:info(?MODULE,"[paypal] ~p Request error ~p", [Method, ReqId]),
         {error, ReqId} end.
 
 product_request(Index, Id, #product{title=Title,price=Price, brief=Brief}) -> [ 

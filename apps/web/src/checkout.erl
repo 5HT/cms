@@ -30,7 +30,7 @@ body() ->
                 case paypal:get_express_details([{"TOKEN", Token}]) of {error, E}-> 
                     wf:update(alert, cart:alert(E)),[];
                 Details ->
-                    wf:info("The order details ~p", [Details]),
+                    wf:info(?MODULE,"The order details ~p", [Details]),
                     #panel{class=["well", "pricing-table"], body=[
                         #h4{class=["text-warning", "text-center"], body= [
                             <<"Receipt: ">>, 
@@ -82,7 +82,7 @@ api_event(Name,Tag,Term) -> error_logger:info_msg("Name ~p, Tag ~p, Term ~p",[Na
 event(init) -> wf:reg(?MAIN_CH), [];
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event({buy, Params, Order}) ->
-    wf:info("BUY ~p", [Params]),
+    wf:info(?MODULE,"BUY ~p", [Params]),
     User = wf:user(),
     case paypal:do_express_checkout(Params) of {error, E} ->
         wf:update(alert, cart:alert(E)), ok;
@@ -110,10 +110,10 @@ event({buy, Params, Order}) ->
                                                  {V, done, paypal}) end end || {K,V} <- Order],
                     wf:redirect("/profile");
                 true ->
-                    wf:info("[checkout] Fail status: ~p", [Status]),
+                    wf:info(?MODULE,"[checkout] Fail status: ~p", [Status]),
                     wf:update(alert, cart:alert(Status)) end end;
         true ->
-            wf:info("[checkout] Fail, tokens doesn't match."),
+            wf:info(?MODULE,"[checkout] Fail, tokens doesn't match."),
             wf:update(alert, cart:alert("tokens doesn't match")) end end;
 
 event({cancel, Token}) -> wf:redirect("/cart?token="++wf:to_list(Token));
