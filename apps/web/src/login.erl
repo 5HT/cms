@@ -10,7 +10,7 @@ main() ->
   avz:callbacks(?LOGIN),
   wf:wire(#api{name=plusLogin, tag=plus}),
 
-  [#dtl{file = "prod", ext="dtl", 
+  [#dtl{file = "dev", ext="dtl", 
         bindings=[{title,<<"Login">>},{body, body()},{css,?LOGIN_CSS},{less,?LESS},{js,?LOGIN_BOOTSTRAP}]} ].
 
 body() ->
@@ -52,10 +52,11 @@ event(init) -> wf:reg(?MAIN_CH), [];
 event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
 event(login) -> 
-    wf:info(?MODULE,"login pressssed"),
+    wf:info(?MODULE,"login pressssed",[]),
     avz:login(email, [{<<"email">>, list_to_binary(wf:q(user))}, {<<"password">>, wf:q(pass)}]);
 event({login, #user{}=User}) ->
-    {ok, U} = kvs:get(user, User#user.email),
+%   {ok, U} = kvs:get(user, User#user.email),
+    U = User,
     case kvs_acl:check_access(User#user.email, {feature,login}) of
     disable ->
         wf:update(messages, index:error(<<"Your account has been blocked.">>));

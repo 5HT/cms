@@ -13,7 +13,7 @@
     {{body}}
     <script>{{script}}</script>
     <div id="n2ostatus" style="display:none"></div>
-    <script src="/static/n2o/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="/static/n2o/bert.js"></script>
     <script src="/static/n2o/bullet.js"></script>
     <script src="/static/n2o/n2o.js"></script>

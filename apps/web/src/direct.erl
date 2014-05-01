@@ -9,7 +9,7 @@
 -include("states.hrl").
 
 main()-> case wf:user() of undefined -> wf:redirect("/");
-    _-> #dtl{file="prod", bindings=[{title,<<"Direct">>},
+    _-> #dtl{file="dev", bindings=[{title,<<"Direct">>},
                                     {body, body()},{css,?DIRECT_CSS},{less,?LESS},{js, ?DIRECT_BOOTSTRAP}]} end.
 body()->
     wf:wire(#api{name=tabshow}),

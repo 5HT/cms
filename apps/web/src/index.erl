@@ -16,7 +16,7 @@ on_shown(Type) ->
     X = jq("a[data-toggle=\""+Type+"\"]"),
     X:on("shown.bs.tab", fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
 
-main() -> #dtl{file = "prod", ext="dtl", bindings=[ {title, <<"Countach">>},
+main() -> #dtl{file = "dev", ext="dtl", bindings=[ {title, <<"Countach">>},
                                                     {body, body()},
                                                     {css,?INDEX_CSS},{less,?LESS},{js,?INDEX_BOOTSTRAP}]}.
 body() ->
@@ -108,7 +108,7 @@ header() ->
     CartFeed = case lists:keyfind(cart, 1, User#user.feeds) of false -> {error, not_found};
         {_,Fid}-> kvs:get(feed,Fid) end,
     Avatar = case User#user.avatar of undefined -> <<"/holder.js/35x35">>;
-        Av -> iolist_to_binary([Av++"?sz=35&width=35&height=35&s=35"]) end,
+        Av -> iolist_to_binary([Av,"?sz=35&width=35&height=35&s=35"]) end,
 
     {Admin, Rev, Dev} = case User of undefined -> {false,false,false};
     _ -> {  kvs_acl:check_access(User#user.email, {feature, admin}) == allow,

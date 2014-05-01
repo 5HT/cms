@@ -12,7 +12,7 @@
 -include("paypal.hrl").
 
 main() ->
-    #dtl{file="prod",
+    #dtl{file="dev",
          bindings=[
             {title,<<"Cart">>},{body, body()},
             {css,?CART_CSS},{less,?LESS},{js, ?CART_BOOTSTRAP}]}.
@@ -30,6 +30,8 @@ body()->
             undefined -> Ws = ?CART_STATE(Wid)#feed_state{view=store},
                          wf:cache({Wid, ?CTX#context.module}, Ws), Ws; WS-> WS end end,
 
+    wf:info(?MODULE,"feed state ~p",[State]),
+    
     index:header() ++ [
     #section{class=[section], body=[
         #panel{class=[container], body=[

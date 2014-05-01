@@ -1,6 +1,6 @@
 RELEASE := countach
 COOKIE  := node_runner
-APPS    := web avz cowboy cowlib erlydtl gproc kvs xmerl n2o n2o_bootstrap oauth ranch feeds
+APPS    := web avz cowboy cowlib erlydtl gproc kvs xmerl n2o n2o_bootstrap oauth ranch feeds sync
 VER     := 1.0.0
 VM      := rels/web/files/vm.args
 SYS     := rels/web/files/sys.config

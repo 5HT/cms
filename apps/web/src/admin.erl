@@ -11,7 +11,7 @@
 -include("records.hrl").
 -include("states.hrl").
 
-log_modules() -> [n2o_bullet,login].
+log_modules() -> [n2o_bullet,login,cart].
 
 grant(Name) ->
     kvs_acl:define_access({user, Name}, {feature, admin}, allow),
@@ -19,11 +19,11 @@ grant(Name) ->
     kvs_acl:define_access({user, Name}, {feature, reviewer}, allow),
     ok.
 
-main()-> #dtl{file="prod",
+main()-> #dtl{file="dev",
               bindings=[{title,<<"Admin">>},{body,body()},{css,?ADMIN_CSS},{less,?LESS},{js,?ADMIN_BOOTSTRAP}]}.
 
 body() ->
-    User = case wf:user() of undefined -> #user{}; U -> U end,
+    User = case wf:user() of undefined -> #user{id="maxim@synrc.com"}; U -> U end,
     wf:wire(#api{name=tabshow}),
     wf:wire(index:on_shown("'pill'")),
 
