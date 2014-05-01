@@ -4,7 +4,7 @@
 -include_lib("n2o_bootstrap/include/wf.hrl").
 -include_lib("kvs/include/payments.hrl").
 -include_lib("kvs/include/products.hrl").
--include_lib("kvs/include/users.hrl").
+-include_lib("kvs/include/user.hrl").
 -include_lib("kvs/include/feeds.hrl").
 -include("paypal.hrl").
 -include("records.hrl").

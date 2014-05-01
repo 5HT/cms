@@ -18,7 +18,7 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, _} = cowboy:start_http(http, 100, [{port, 8001}],
+    {ok, _} = cowboy:start_http(http, 100, [{port, wf:config(n2o,transition_port,8000)}],
                                            [{env, [{dispatch, dispatch_rules()}]}]),
 
     Pid = spawn(fun () -> wf:reg(lobby), chat_room([],0) end),
@@ -29,8 +29,8 @@ init([]) ->
 dispatch_rules() ->
     cowboy_router:compile(
         [{'_', [
-            {"/static/[...]", cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
-                                                {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
+            {"/static/[...]", cowboy_static,
+                {priv_dir, ?APP, <<"static">>,[{mimetypes,cow_mimetypes,all}]}},
             {"/rest/:bucket", n2o_rest, []},
             {"/rest/:bucket/:key", n2o_rest, []},
             {"/rest/:bucket/:key/[...]", n2o_rest, []},

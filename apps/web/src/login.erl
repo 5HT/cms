@@ -2,12 +2,14 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 -include_lib("n2o_bootstrap/include/wf.hrl").
--include_lib("kvs/include/users.hrl").
+-include_lib("kvs/include/user.hrl").
 -include("records.hrl").
 -define(LOGIN,[facebook,google,twitter]).
 
 main() ->
   avz:callbacks(?LOGIN),
+  wf:wire(#api{name=plusLogin, tag=plus}),
+
   [#dtl{file = "prod", ext="dtl", 
         bindings=[{title,<<"Login">>},{body, body()},{css,?LOGIN_CSS},{less,?LESS},{js,?LOGIN_BOOTSTRAP}]} ].
 
@@ -49,7 +51,9 @@ body() ->
 event(init) -> wf:reg(?MAIN_CH), [];
 event({counter,C}) -> wf:update(onlinenumber,wf:to_list(C));
 event({delivery, [_|Route], Msg}) -> process_delivery(Route, Msg);
-event(login) -> avz:login(email, [{<<"email">>, list_to_binary(wf:q(user))}, {<<"password">>, wf:q(pass)}]);
+event(login) -> 
+    wf:info(?MODULE,"login pressssed"),
+    avz:login(email, [{<<"email">>, list_to_binary(wf:q(user))}, {<<"password">>, wf:q(pass)}]);
 event({login, #user{}=User}) ->
     {ok, U} = kvs:get(user, User#user.email),
     case kvs_acl:check_access(User#user.email, {feature,login}) of
